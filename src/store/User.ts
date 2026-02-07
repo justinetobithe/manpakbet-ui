@@ -7,18 +7,18 @@ export const createUserSlice: StateSlice<UserStateDefinition & UserStateActions>
 
     setUser: (user: User | null) =>
         set((state) => {
-            state.user.user = user;
-            state.user.isAuthenticated = !!user;
+            state.user = user;
+            state.isAuthenticated = !!user;
         }),
 
     clearUser: () =>
         set((state) => {
-            state.user.user = null;
-            state.user.isAuthenticated = false;
+            state.user = null;
+            state.isAuthenticated = false;
         }),
 
     setAuth: (value: boolean) =>
         set((state) => {
-            state.user.isAuthenticated = value;
+            state.isAuthenticated = value;
         }),
 });
