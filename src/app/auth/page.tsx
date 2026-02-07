@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AuthDialog } from "@/components/auth-dialog";
+import AuthDialog from "@/components/AuthDialog";
 
 export default function AuthPage() {
     const [open, setOpen] = useState(true);
