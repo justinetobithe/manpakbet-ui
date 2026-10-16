@@ -1,23 +1,40 @@
-export type Role = "user" | "admin";
+export type Role = "admin" | "staff" | "user" | (string & {});
 
-export default interface User {
-  id: string;
-  email: string;
-  role: Role;
-  first_name: string;
-  last_name: string;
-  phone: string | null;
-  auth_token: string;
-  emailVerified?: string | null;
-}
+export type Permission =
+    | "dashboard.view"
+    | "users.view"
+    | "users.manage"
+    | "users.balance"
+    | "games.manage"
+    | "content.manage"
+    | "transactions.view"
+    | "transactions.process"
+    | "roles.manage";
 
-export interface UserStateDefinition {
-  user: User | null;
-  isAuthenticated: boolean;
-}
+export type User = {
+    id: number;
+    name: string;
+    first_name?: string | null;
+    last_name?: string | null;
+    email?: string | null;
+    phone?: string | null;
+    role: Role;
+    balance: string;
+    is_active: boolean;
+    last_login_at?: string | null;
+    created_at: string;
+    permissions?: Permission[];
+};
 
-export interface UserStateActions {
-  setUser: (user: User | null) => void;
-  clearUser: () => void;
-  setAuth: (value: boolean) => void;
-}
+export type ProfileInput = {
+    first_name?: string;
+    last_name?: string;
+    email?: string;
+    phone?: string;
+};
+
+export type PasswordInput = {
+    current_password: string;
+    password: string;
+    password_confirmation: string;
+};

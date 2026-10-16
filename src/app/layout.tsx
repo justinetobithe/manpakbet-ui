@@ -1,27 +1,32 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Manrope, Sora } from "next/font/google";
 import "./globals.css";
-import { AppProviders } from "@/components/AppProviders";
-import { Toaster } from "@/components/ui/sonner";
-import AppShell from "@/components/AppShell";
+import AppProviders from "@/components/providers/AppProviders";
+import { siteConfig } from "@/config/site";
 
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
-const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+const display = Sora({ variable: "--font-display", subsets: ["latin"], weight: ["600", "700", "800"] });
+const body = Manrope({ variable: "--font-body", subsets: ["latin"], weight: ["400", "500", "600", "700", "800"] });
 
 export const metadata: Metadata = {
-  title: "ManpakBet",
-  description: "ManpakBet UI",
+    title: { default: `${siteConfig.name} — ${siteConfig.tagline}`, template: `%s · ${siteConfig.name}` },
+    description: siteConfig.description,
+    applicationName: siteConfig.name,
+    openGraph: { title: siteConfig.name, description: siteConfig.description, type: "website" },
+};
+
+export const viewport: Viewport = {
+    themeColor: "#0b0613",
+    width: "device-width",
+    initialScale: 1,
+    viewportFit: "cover",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <AppProviders>
-          <AppShell>{children}</AppShell>
-          <Toaster richColors />
-        </AppProviders>
-      </body>
-    </html>
-  );
+    return (
+        <html lang="en" className="dark" suppressHydrationWarning>
+            <body className={`${display.variable} ${body.variable} bg-stage`}>
+                <AppProviders>{children}</AppProviders>
+            </body>
+        </html>
+    );
 }

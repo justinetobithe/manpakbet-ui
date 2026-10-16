@@ -1,20 +1,23 @@
-import axios, { AxiosError } from 'axios';
-import type ErrorMessage from '@/types/ErrorMessage';
+import axios from "axios";
+import type ErrorMessage from "@/types/ErrorMessage";
 
-const apiError = (err: unknown): string => {
-    const error = err as Error | AxiosError<ErrorMessage>;
+export const apiFieldErrors = (err: unknown): Record<string, string> => {
+    if (!axios.isAxiosError<ErrorMessage>(err)) return {};
+    const errors = err.response?.data?.errors ?? {};
+    return Object.fromEntries(Object.entries(errors).map(([key, value]) => [key, Array.isArray(value) ? value[0] : String(value)]));
+};
 
-    if (axios.isAxiosError(error)) {
-        if (error.response) {
-            return error.response.data.message.length
-                ? error.response.data.message
-                : `${error.response.status} : ${error.response.statusText}`;
-        } else {
-            return error.message;
-        }
-    } else {
-        return error.message;
+const apiError = (err: unknown, fallback = "Something went wrong. Please try again."): string => {
+    if (axios.isAxiosError<ErrorMessage>(err)) {
+        if (!err.response) return err.code === "ECONNABORTED" ? "The request timed out." : "Unable to reach the server.";
+        const message = err.response.data?.message;
+        if (message) return message;
+        return `${err.response.status} ${err.response.statusText}`.trim() || fallback;
     }
+
+    if (err instanceof Error && err.message) return err.message;
+
+    return fallback;
 };
 
 export default apiError;

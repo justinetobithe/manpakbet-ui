@@ -1,0 +1,90 @@
+"use client";
+
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { Flame, Heart, Play, Sparkles, Star, Trophy } from "lucide-react";
+import { AppImage } from "@/components/app";
+import { gameImage } from "@/lib/assets";
+import { formatCompact } from "@/lib/format";
+import { cn } from "@/lib/utils";
+import { useGameStore } from "@/stores";
+import type { Game, GameBadge } from "@/types/Casino";
+
+const badgeMeta: Record<GameBadge, { label: string; icon: typeof Flame; className: string }> = {
+    hot: { label: "Hot", icon: Flame, className: "bg-ember text-white" },
+    new: { label: "New", icon: Sparkles, className: "bg-linear-to-r from-jade-500 to-emerald-400 text-[#00241a]" },
+    top: { label: "Top", icon: Star, className: "bg-linear-to-r from-violet-500 to-fuchsia-500 text-white" },
+    jackpot: { label: "Jackpot", icon: Trophy, className: "bg-gold text-[#2a1600]" },
+};
+
+type GameCardProps = {
+    game: Game;
+    className?: string;
+    priority?: boolean;
+    index?: number;
+};
+
+export default function GameCard({ game, className, index = 0 }: GameCardProps) {
+    const favorite = useGameStore((state) => state.favorites.includes(game.slug));
+    const toggleFavorite = useGameStore((state) => state.toggleFavorite);
+    const badge = game.badge ? badgeMeta[game.badge] : null;
+    const providerName = game.provider_ref?.name ?? game.provider;
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-30px" }}
+            transition={{ duration: 0.35, delay: Math.min(index, 12) * 0.03 }}
+            className={cn("group relative", className)}
+        >
+            <Link
+                href={`/play/${game.slug}`}
+                className="block overflow-hidden rounded-2xl border border-border bg-plum-850 transition duration-300 hover:-translate-y-1 hover:border-gold-400/45 hover:shadow-[0_18px_40px_-18px_rgba(255,194,61,0.45)]"
+            >
+                <div className="relative aspect-[4/5]">
+                    <AppImage src={gameImage(game)} alt={game.name} wrapperClassName="absolute inset-0" className="transition duration-500 group-hover:scale-[1.06]" />
+                    <div className="absolute inset-0 bg-linear-to-t from-black/85 via-black/10 to-transparent" />
+
+                    {badge ? (
+                        <span className={cn("absolute top-2 left-2 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-extrabold tracking-wide uppercase shadow-lg", badge.className)}>
+                            <badge.icon className="size-3" />
+                            {badge.label}
+                        </span>
+                    ) : null}
+
+                    <div className="absolute inset-0 grid place-items-center opacity-0 transition duration-300 group-hover:opacity-100">
+                        <span className="bg-gold ring-gold grid size-12 scale-75 place-items-center rounded-full text-[#2a1600] transition duration-300 group-hover:scale-100">
+                            <Play className="ml-0.5 size-5 fill-current" />
+                        </span>
+                    </div>
+
+                    <div className="absolute inset-x-0 bottom-0 p-2.5">
+                        <div className="line-clamp-2 text-[13px] leading-tight font-bold text-white drop-shadow">{game.name}</div>
+                        <div className="mt-1 flex items-center justify-between gap-2 text-[10px] font-semibold text-white/60">
+                            <span className="truncate uppercase">{providerName ?? game.category?.name ?? "ManpakBet"}</span>
+                            {game.plays_count ? <span className="shrink-0">{formatCompact(game.plays_count)} plays</span> : null}
+                        </div>
+                    </div>
+                </div>
+            </Link>
+
+            <button
+                type="button"
+                onClick={() => toggleFavorite(game.slug)}
+                className={cn(
+                    "absolute top-2 right-2 grid size-8 place-items-center rounded-full backdrop-blur-md transition",
+                    favorite ? "bg-ember-500/90 text-white" : "bg-black/45 text-white/80 opacity-100 hover:bg-black/70 sm:opacity-0 sm:group-hover:opacity-100"
+                )}
+                aria-label={favorite ? "Remove from favorites" : "Add to favorites"}
+                aria-pressed={favorite}
+            >
+                <Heart className={cn("size-4", favorite && "fill-current")} />
+            </button>
+        </motion.div>
+    );
+}
+
+export function GameCardSkeleton({ className }: { className?: string }) {
+    return <div className={cn("aspect-[4/5] animate-pulse rounded-2xl bg-white/5", className)} />;
+}

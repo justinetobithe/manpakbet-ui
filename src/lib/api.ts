@@ -1,57 +1,50 @@
-import { toast } from "@/lib/toast";
 import axios from "axios";
-import { Session, getServerSession } from "next-auth";
+import type { Session } from "next-auth";
 import { getSession, signOut } from "next-auth/react";
-import AuthOptions from "./AuthOptions";
 
-const baseURL = process.env.NEXT_PUBLIC_API_URL;
+export const API_URL = (process.env.NEXT_PUBLIC_API_URL ?? "").replace(/\/+$/, "");
 
 export const api = axios.create({
-    baseURL,
-    headers: { "X-Requested-With": "XMLHttpRequest" },
-    withCredentials: true,
+    baseURL: `${API_URL}/api/v1`,
+    headers: { Accept: "application/json", "X-Requested-With": "XMLHttpRequest" },
+    timeout: 20000,
 });
 
-let lastSession: Session | null = null;
+let cachedSession: Session | null = null;
+let sessionPromise: Promise<Session | null> | null = null;
 
-api.interceptors.request.use(async (request) => {
-    if (typeof window === "undefined") {
-        const session = await getServerSession(AuthOptions);
+const resolveSession = async () => {
+    if (cachedSession && Date.now() < Date.parse(cachedSession.expires)) return cachedSession;
+    sessionPromise ??= getSession().finally(() => {
+        sessionPromise = null;
+    });
+    cachedSession = await sessionPromise;
+    return cachedSession;
+};
 
-        const token = (session?.user as any)?.auth_token;
-        request.headers.Authorization = token ? `Bearer ${token}` : undefined;
+export const resetApiSession = () => {
+    cachedSession = null;
+};
 
-        return request;
-    }
+api.interceptors.request.use(async (config) => {
+    if (typeof window === "undefined") return config;
 
-    if (!lastSession || Date.now() > Date.parse(lastSession.expires)) {
-        lastSession = await getSession();
-    }
+    const session = await resolveSession();
+    const token = session?.user?.auth_token;
 
-    const token = (lastSession?.user as any)?.auth_token;
-    request.headers.Authorization = token ? `Bearer ${token}` : undefined;
+    if (token) config.headers.Authorization = `Bearer ${token}`;
 
-    return request;
+    return config;
 });
 
 api.interceptors.response.use(
-    (res) => res,
+    (response) => response,
     async (error) => {
-        if (axios.isAxiosError(error)) {
-            if (error.response?.status === 401) {
-                toast({ description: "Unauthenticated", variant: "destructive" });
+        if (axios.isAxiosError(error) && error.response?.status === 401 && typeof window !== "undefined") {
+            const hadToken = Boolean(error.config?.headers?.Authorization);
+            resetApiSession();
 
-                if (typeof window !== "undefined" && window.location.pathname !== "/login") {
-                    await signOut({ callbackUrl: "/login" });
-                }
-
-                return Promise.reject(error);
-            }
-
-            toast({
-                description: error.response?.data?.message ?? error.message,
-                variant: "destructive",
-            });
+            if (hadToken) await signOut({ callbackUrl: "/login?expired=1" });
         }
 
         return Promise.reject(error);

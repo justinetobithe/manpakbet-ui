@@ -1,131 +1,127 @@
-import type { NextAuthOptions } from "next-auth";
+import type { NextAuthOptions, User as AuthUser } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
+import type { Permission, Role } from "@/types/User";
 
-type ApiLoginResponse = {
-    data: {
-        token: string;
-        user: {
-            id: number | string;
-            email: string | null;
-            role?: "user" | "admin" | string;
-            first_name?: string | null;
-            last_name?: string | null;
-            phone?: string | null;
-        };
-    };
+type ApiUser = {
+    id: number | string;
+    name?: string | null;
+    email?: string | null;
+    phone?: string | null;
+    first_name?: string | null;
+    last_name?: string | null;
+    role?: Role | null;
+    permissions?: Permission[];
 };
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+type ApiAuthResponse = {
+    status: "success" | "error";
+    message: string;
+    data: { token: string; user: ApiUser };
+};
 
-async function apiLogin(email: string, password: string): Promise<ApiLoginResponse> {
-    const res = await fetch(`${API_URL}/api/login`, {
+const API_URL = (process.env.NEXT_PUBLIC_API_URL ?? "").replace(/\/+$/, "");
+const GOOGLE_ID = process.env.GOOGLE_CLIENT_ID ?? process.env.GOOGLE_ID;
+const GOOGLE_SECRET = process.env.GOOGLE_CLIENT_SECRET ?? process.env.GOOGLE_SECRET;
+
+async function callAuthApi(path: string, body: Record<string, string>): Promise<ApiAuthResponse> {
+    if (!API_URL) throw new Error("NEXT_PUBLIC_API_URL is not configured");
+
+    const res = await fetch(`${API_URL}/api/v1/auth/${path}`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify(body),
         cache: "no-store",
     });
 
     const json = await res.json().catch(() => null);
-    if (!res.ok) throw new Error(json?.message ?? "Login failed");
-    return json as ApiLoginResponse;
+
+    if (!res.ok || !json?.data?.token) throw new Error(json?.message ?? "Authentication failed");
+
+    return json as ApiAuthResponse;
 }
 
-async function apiLoginWithGoogle(access_provider_token: string): Promise<ApiLoginResponse> {
-    const res = await fetch(`${API_URL}/api/login/google`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({ provider: "google", access_provider_token }),
-        cache: "no-store",
-    });
+const toSessionUser = ({ data }: ApiAuthResponse): AuthUser => ({
+    id: String(data.user.id),
+    name: data.user.name ?? "",
+    email: data.user.email ?? null,
+    phone: data.user.phone ?? null,
+    first_name: data.user.first_name ?? "",
+    last_name: data.user.last_name ?? "",
+    role: data.user.role ?? "user",
+    permissions: data.user.permissions ?? [],
+    auth_token: data.token,
+});
 
-    const json = await res.json().catch(() => null);
-    if (!res.ok) throw new Error(json?.message ?? "Google login failed");
-    return json as ApiLoginResponse;
+const providers: NextAuthOptions["providers"] = [
+    CredentialsProvider({
+        id: "credentials",
+        name: "Email",
+        credentials: {
+            email: { label: "Email", type: "email" },
+            password: { label: "Password", type: "password" },
+        },
+        authorize: async (credentials) => {
+            if (!credentials?.email || !credentials.password) throw new Error("Email and password are required");
+            return toSessionUser(await callAuthApi("login", { email: credentials.email, password: credentials.password }));
+        },
+    }),
+    CredentialsProvider({
+        id: "otp",
+        name: "Phone",
+        credentials: {
+            phone: { label: "Phone", type: "tel" },
+            code: { label: "Code", type: "text" },
+        },
+        authorize: async (credentials) => {
+            if (!credentials?.phone || !credentials.code) throw new Error("Phone number and code are required");
+            return toSessionUser(await callAuthApi("otp/verify", { phone: credentials.phone, code: credentials.code }));
+        },
+    }),
+];
+
+if (GOOGLE_ID && GOOGLE_SECRET) {
+    providers.push(GoogleProvider({ clientId: GOOGLE_ID, clientSecret: GOOGLE_SECRET }));
 }
 
 const AuthOptions: NextAuthOptions = {
-    providers: [
-        CredentialsProvider({
-            name: "Credentials",
-            credentials: {
-                email: { label: "Email", type: "email" },
-                password: { label: "Password", type: "password" },
-            },
-            authorize: async (credentials) => {
-                if (!credentials?.email || !credentials?.password) {
-                    throw new Error("Email or password is missing.");
-                }
-
-                const response = await apiLogin(credentials.email, credentials.password);
-                const u = response.data.user;
-
-                return {
-                    id: String(u.id ?? ""),
-                    email: u.email ?? credentials.email,
-                    role: (u.role as any) ?? "user",
-                    first_name: u.first_name ?? "",
-                    last_name: u.last_name ?? "",
-                    phone: u.phone ?? null,
-                    auth_token: response.data.token,
-                } as any;
-            },
-        }),
-
-        GoogleProvider({
-            clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
-            clientSecret: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET!,
-        }),
-    ],
-
-    session: { strategy: "jwt" },
-
-    pages: {
-        signIn: "/login",
-        error: "/unauthenticated",
-    },
-
+    providers,
+    secret: process.env.NEXTAUTH_SECRET,
+    session: { strategy: "jwt", maxAge: 60 * 60 * 24 * 7 },
+    pages: { signIn: "/login", error: "/login" },
     callbacks: {
-        async jwt({ token, user, account }) {
+        async jwt({ token, user, account, trigger, session }) {
             if (account?.provider === "google" && account.access_token) {
-                const response = await apiLoginWithGoogle(account.access_token);
-                const u = response.data.user;
-
-                token.auth_token = response.data.token;
-                token.role = (u.role as any) ?? "user";
-                token.first_name = u.first_name ?? "";
-                token.last_name = u.last_name ?? "";
-                token.phone = u.phone ?? null;
-                token.email = u.email ?? token.email;
-                token.id = String(u.id ?? token.id ?? "");
+                Object.assign(token, toSessionUser(await callAuthApi("google", { access_provider_token: account.access_token })));
                 return token;
             }
 
-            if (user) {
-                token.auth_token = (user as any).auth_token;
-                token.role = (user as any).role ?? "user";
-                token.first_name = (user as any).first_name ?? "";
-                token.last_name = (user as any).last_name ?? "";
-                token.phone = (user as any).phone ?? null;
-                token.email = (user as any).email ?? token.email;
-                token.id = String((user as any).id ?? token.id ?? "");
+            if (user) Object.assign(token, user);
+
+            if (trigger === "update" && session?.user) {
+                const { first_name, last_name, email, phone, name } = session.user;
+                Object.assign(token, { first_name, last_name, email, phone, name });
             }
 
             return token;
         },
-
         async session({ session, token }) {
-            (session.user as any).auth_token = (token as any).auth_token ?? "";
-            (session.user as any).role = (token as any).role ?? "user";
-            (session.user as any).first_name = (token as any).first_name ?? "";
-            (session.user as any).last_name = (token as any).last_name ?? "";
-            (session.user as any).phone = (token as any).phone ?? null;
-            (session.user as any).id = (token as any).id ?? "";
-            (session.user as any).email = token.email ?? null;
-
+            session.user = {
+                id: token.id ?? "",
+                name: token.name ?? "",
+                email: token.email ?? null,
+                phone: token.phone ?? null,
+                first_name: token.first_name ?? "",
+                last_name: token.last_name ?? "",
+                role: token.role ?? "user",
+                permissions: token.permissions ?? [],
+                auth_token: token.auth_token ?? "",
+            };
             return session;
         },
     },
 };
+
+export const googleEnabled = Boolean(GOOGLE_ID && GOOGLE_SECRET);
 
 export default AuthOptions;

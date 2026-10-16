@@ -1,9 +1,13 @@
-import AuthForm from "@/components/auth/AuthForm";
+import { Suspense } from "react";
+import type { Metadata } from "next";
+import AuthPage from "@/components/auth/AuthPage";
+
+export const metadata: Metadata = { title: "Log in" };
 
 export default function LoginPage() {
     return (
-        <div className="min-h-[calc(100vh-0px)] flex items-center justify-center p-4">
-            <AuthForm initialMode="login" />
-        </div>
+        <Suspense>
+            <AuthPage initialMode="login" />
+        </Suspense>
     );
 }

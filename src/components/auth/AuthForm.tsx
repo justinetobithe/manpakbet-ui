@@ -1,297 +1,280 @@
 "use client";
 
-import Image from "next/image";
+import * as React from "react";
 import Link from "next/link";
-import { useMemo, useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
+import { useRouter, useSearchParams } from "next/navigation";
+import { getSession, signIn } from "next-auth/react";
+import { AnimatePresence, motion } from "framer-motion";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { KeyRound, Lock, Mail, Smartphone } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
-import { toast } from "@/lib/toast";
-import AppButton from "@/components/AppButton";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useRegister } from "@/lib/AuthenticationAPI";
+import { AppButton, AppTextField, AppToast } from "@/components/app";
+import { useRegister, useRequestOtp } from "@/lib/AuthenticationAPI";
+import apiError, { apiFieldErrors } from "@/lib/apiError";
+import { cn } from "@/lib/utils";
+import type { AuthMode } from "@/stores/useUiStore";
 
-type Mode = "login" | "register";
-type LoginType = "otp" | "password";
+const loginSchema = z.object({
+    email: z.email("Enter a valid email"),
+    password: z.string().min(1, "Password is required"),
+});
 
-export default function AuthForm({
-    initialMode,
-    onDone,
-}: {
-    initialMode: Mode;
-    onDone?: () => void;
-}) {
-    const [mode, setMode] = useState<Mode>(initialMode);
-    const [loginType, setLoginType] = useState<LoginType>("otp");
+const otpSchema = z.object({
+    phone: z.string().regex(/^(\+?63|0)?9\d{9}$/, "Enter a valid PH mobile number"),
+    code: z.string().regex(/^\d{6}$/, "Enter the 6-digit code"),
+});
 
-    const title = useMemo(
-        () => (mode === "register" ? "Create your account" : "Welcome back"),
-        [mode]
-    );
+const registerSchema = z
+    .object({
+        first_name: z.string().trim().min(1, "First name is required").max(100),
+        last_name: z.string().trim().min(1, "Last name is required").max(100),
+        email: z.email("Enter a valid email"),
+        phone: z.union([z.literal(""), z.string().regex(/^(\+?63|0)?9\d{9}$/, "Enter a valid PH mobile number")]),
+        password: z.string().min(6, "At least 6 characters").max(100),
+        password_confirmation: z.string(),
+    })
+    .refine((value) => value.password === value.password_confirmation, { path: ["password_confirmation"], message: "Passwords do not match" });
 
+type LoginValues = z.infer<typeof loginSchema>;
+type OtpValues = z.infer<typeof otpSchema>;
+type RegisterValues = z.infer<typeof registerSchema>;
+
+type AuthFormProps = {
+    mode: AuthMode;
+    onModeChange: (mode: AuthMode) => void;
+    onSuccess?: () => void;
+    redirectAfter?: boolean;
+};
+
+export default function AuthForm({ mode, onModeChange, onSuccess, redirectAfter = false }: AuthFormProps) {
     const router = useRouter();
-    const { mutateAsync: registerMutate, isPending: registerLoading } = useRegister();
+    const searchParams = useSearchParams();
+    const [method, setMethod] = React.useState<"password" | "otp">("password");
+    const [agree, setAgree] = React.useState(false);
+    const [agreeError, setAgreeError] = React.useState(false);
 
-    const [agree, setAgree] = useState(false);
+    const finish = async (message: string) => {
+        AppToast.success(message);
+        const session = await getSession();
+        onSuccess?.();
+        router.refresh();
 
-    const [phone, setPhone] = useState("");
-    const [otp, setOtp] = useState("");
+        if (!redirectAfter) return;
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-
-    const requireAgree = true;
-
-    const actionLabel =
-        loginType === "otp" ? "Login/Register" : mode === "register" ? "Create account" : "Login";
-
-    const submitPassword = async () => {
-        if (requireAgree && !agree) {
-            toast({
-                title: "Confirm required",
-                description: "Please confirm 21+ and accept Terms/Privacy.",
-                variant: "destructive",
-            });
-            return;
-        }
-
-        if (!email) {
-            toast({ title: "Missing email", description: "Email is required.", variant: "destructive" });
-            return;
-        }
-        if (!password) {
-            toast({
-                title: "Missing password",
-                description: "Password is required.",
-                variant: "destructive",
-            });
-            return;
-        }
-
-        if (mode === "login") {
-            const res = await signIn("credentials", { email, password, redirect: false });
-            if (res?.error) {
-                toast({ title: "Login failed", description: res.error, variant: "destructive" });
-                return;
-            }
-            router.refresh();
-            router.push("/user/dashboard");
-            onDone?.();
-            return;
-        }
-
-        await registerMutate({ inputs: { email, password } });
+        const callbackUrl = searchParams.get("callbackUrl");
+        const backoffice = session?.user && (session.user.role === "admin" || session.user.role === "staff" || session.user.permissions.length > 0);
+        router.replace(callbackUrl && callbackUrl.startsWith("/") ? callbackUrl : backoffice ? "/admin" : "/account");
     };
 
-    const getOtp = async () => {
-        toast({ title: "Not ready", description: "Get Code needs backend endpoint.", variant: "destructive" });
+    const ensureAgreed = () => {
+        if (agree) return true;
+        setAgreeError(true);
+        AppToast.warning("Please confirm you are 21+ and accept the terms.");
+        return false;
     };
-
-    const submitOtp = async () => {
-        toast({
-            title: "Not ready",
-            description: "OTP login needs backend endpoint. UI ready.",
-            variant: "destructive",
-        });
-    };
-
-    const fieldWrap =
-        "rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3";
-    const fieldLabel = "text-[11px] text-white/55";
-    const fieldInput =
-        "h-10 sm:h-11 border-0 bg-transparent text-white placeholder:text-white/40 focus-visible:ring-0 text-sm";
 
     return (
         <div className="w-full">
-            <div className="grid w-full grid-cols-1 overflow-hidden rounded-[28px] border border-white/10 bg-white/[0.02] sm:grid-cols-[0.95fr_1.05fr]">
-                <div className="relative hidden sm:block min-h-[640px]">
-                    <Image
-                        src="/casino-promotional-banner.png"
-                        alt="Casino Promotional Banner"
-                        fill
-                        priority
-                        className="object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-black/10 to-transparent" />
-                    <div className="absolute bottom-0 left-0 right-0 px-6 pb-6">
-                        <div className="text-3xl font-extrabold tracking-wide">BIGGEST</div>
-                        <div className="mt-1 text-lg font-semibold">CASINO PLATFORM</div>
-                        <div className="mt-1 text-xs text-white/70">IN THE PHILIPPINES</div>
-                    </div>
-                </div>
-
-                <div className="relative flex w-full flex-col bg-[radial-gradient(900px_circle_at_30%_0%,rgba(34,197,94,0.14),transparent_55%),radial-gradient(900px_circle_at_90%_40%,rgba(59,130,246,0.12),transparent_55%),linear-gradient(to_bottom,rgba(10,30,40,0.96),rgba(7,18,28,0.96))]">
-                    <div className="flex items-center justify-center px-5 pt-5 sm:px-6 sm:pt-6">
-                        <div className="relative h-9 w-[190px] sm:h-10 sm:w-[210px]">
-                            <Image src="/logo.png" alt="ManpakBet" fill priority className="object-contain" />
-                        </div>
-                    </div>
-
-                    <div className="px-5 pt-3 sm:px-6 sm:pt-4">
-                        <div className="text-center text-sm font-semibold">{title}</div>
-                    </div>
-
-                    <div className="px-4 pt-4 sm:px-6 sm:pt-5">
-                        <Tabs value={loginType} onValueChange={(v) => setLoginType(v as LoginType)}>
-                            <TabsList className="grid w-full grid-cols-2 bg-white/[0.06] p-1 rounded-2xl">
-                                <TabsTrigger
-                                    value="otp"
-                                    className="rounded-xl text-xs sm:text-sm data-[state=active]:bg-emerald-500/15 data-[state=active]:text-emerald-200"
-                                >
-                                    Verification Code
-                                </TabsTrigger>
-                                <TabsTrigger
-                                    value="password"
-                                    className="rounded-xl text-xs sm:text-sm data-[state=active]:bg-emerald-500/15 data-[state=active]:text-emerald-200"
-                                >
-                                    Password
-                                </TabsTrigger>
-                            </TabsList>
-
-                            <TabsContent value="otp" className="mt-4 space-y-3">
-                                <div className={fieldWrap}>
-                                    <div className="flex items-center gap-2">
-                                        <div className="flex h-9 items-center gap-2 rounded-xl bg-white/[0.05] px-2 text-sm text-white/80">
-                                            <span className="text-xs">🇵🇭</span>
-                                            <span className="text-xs text-white/70">+63</span>
-                                        </div>
-                                        <Input
-                                            value={phone}
-                                            onChange={(e) => setPhone(e.target.value)}
-                                            placeholder="Enter Phone Number"
-                                            inputMode="tel"
-                                            className={fieldInput}
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="grid grid-cols-1 gap-3 sm:grid-cols-[1fr_160px]">
-                                    <div className={fieldWrap}>
-                                        <Input
-                                            value={otp}
-                                            onChange={(e) => setOtp(e.target.value)}
-                                            placeholder="Verification Code"
-                                            className={fieldInput}
-                                            disabled
-                                        />
-                                    </div>
-
-                                    <AppButton
-                                        tone="primary"
-                                        className="h-11 sm:h-[52px] w-full rounded-2xl"
-                                        onClick={getOtp}
-                                    >
-                                        Get Code
-                                    </AppButton>
-                                </div>
-
-                                <AppButton tone="primary" className="h-11 sm:h-12 w-full rounded-2xl" onClick={submitOtp}>
-                                    {actionLabel}
-                                </AppButton>
-
-                                <button className="w-full text-center text-xs text-emerald-200/80 hover:text-emerald-200">
-                                    Didn&apos;t receive code?
-                                </button>
-                            </TabsContent>
-
-                            <TabsContent value="password" className="mt-4 space-y-3">
-                                <div className={fieldWrap}>
-                                    <div className={fieldLabel}>Email</div>
-                                    <Input
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        placeholder="you@email.com"
-                                        inputMode="email"
-                                        className={fieldInput}
-                                    />
-                                </div>
-
-                                <div className={fieldWrap}>
-                                    <div className={fieldLabel}>Password</div>
-                                    <Input
-                                        type="password"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        placeholder="Password"
-                                        className={fieldInput}
-                                    />
-                                </div>
-
-                                <AppButton
-                                    tone="primary"
-                                    className="h-11 sm:h-12 w-full rounded-2xl"
-                                    onClick={submitPassword}
-                                    disabled={registerLoading}
-                                >
-                                    {actionLabel}
-                                </AppButton>
-
-                                {mode === "login" ? (
-                                    <button className="w-full text-center text-xs text-emerald-200/80 hover:text-emerald-200">
-                                        Forgot password?
-                                    </button>
-                                ) : null}
-                            </TabsContent>
-                        </Tabs>
-                    </div>
-
-                    <div className="px-4 pt-4 sm:px-6">
-                        <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.03] px-3 py-3">
-                            <Checkbox checked={agree} onCheckedChange={(v) => setAgree(!!v)} />
-                            <div className="text-xs leading-relaxed text-white/70">
-                                I confirm that I am 21 years old and I agree to the{" "}
-                                <Link href="/terms" className="text-emerald-200 underline underline-offset-4">
-                                    Terms and Conditions
-                                </Link>{" "}
-                                and{" "}
-                                <Link href="/privacy" className="text-emerald-200 underline underline-offset-4">
-                                    Privacy Policy
-                                </Link>
-                            </div>
-                        </div>
-
-                        <div className="mt-3 text-center text-[11px] text-white/55">
-                            Prohibition to play in open and public places.
-                        </div>
-                    </div>
-
-                    <div className="mt-4 px-4 pb-5 sm:mt-auto sm:px-6 sm:pt-4">
-                        <div className="flex items-center justify-center">
-                            <Image src="/pagcor-logo.svg" alt="PAGCOR" width={170} height={40} className="opacity-95" />
-                        </div>
-
-                        <div className="mt-4 h-2 w-full overflow-hidden rounded-full bg-white/10">
-                            <div className="h-full w-full bg-[linear-gradient(90deg,#ff4d6d,#ffb703,#8ac926,#00c2ff,#7c3aed)]" />
-                        </div>
-
-                        <div className="mt-4 flex items-center justify-center gap-2">
-                            <button
-                                className={[
-                                    "rounded-2xl px-4 py-2 text-xs transition",
-                                    mode === "register"
-                                        ? "bg-white/12 text-white"
-                                        : "bg-white/[0.04] text-white/70 hover:bg-white/10",
-                                ].join(" ")}
-                                onClick={() => setMode("register")}
-                            >
-                                Register
-                            </button>
-                            <button
-                                className={[
-                                    "rounded-2xl px-4 py-2 text-xs transition",
-                                    mode === "login"
-                                        ? "bg-white/12 text-white"
-                                        : "bg-white/[0.04] text-white/70 hover:bg-white/10",
-                                ].join(" ")}
-                                onClick={() => setMode("login")}
-                            >
-                                Login
-                            </button>
-                        </div>
-                    </div>
-                </div>
+            <div className="relative grid grid-cols-2 rounded-2xl border border-border bg-black/30 p-1">
+                {(["login", "register"] as const).map((item) => (
+                    <button
+                        key={item}
+                        type="button"
+                        onClick={() => onModeChange(item)}
+                        className={cn("relative h-10 rounded-xl text-sm font-bold transition", mode === item ? "text-[#2a1600]" : "text-foreground/65 hover:text-foreground")}
+                    >
+                        {mode === item ? <motion.span layoutId="auth-mode" className="bg-gold absolute inset-0 rounded-xl" transition={{ type: "spring", stiffness: 420, damping: 34 }} /> : null}
+                        <span className="relative">{item === "login" ? "Log in" : "Create account"}</span>
+                    </button>
+                ))}
             </div>
+
+            <AnimatePresence mode="wait" initial={false}>
+                <motion.div key={`${mode}-${method}`} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }} className="mt-5">
+                    {mode === "login" ? (
+                        <>
+                            <div className="mb-4 flex gap-2">
+                                <MethodPill active={method === "password"} onClick={() => setMethod("password")} icon={<Mail />} label="Email" />
+                                <MethodPill active={method === "otp"} onClick={() => setMethod("otp")} icon={<Smartphone />} label="Mobile OTP" />
+                            </div>
+                            {method === "password" ? (
+                                <PasswordLogin ensureAgreed={ensureAgreed} onDone={() => finish("Welcome back!")} />
+                            ) : (
+                                <OtpLogin ensureAgreed={ensureAgreed} onDone={() => finish("You're signed in!")} />
+                            )}
+                        </>
+                    ) : (
+                        <RegisterForm ensureAgreed={ensureAgreed} onDone={() => finish("Account created — welcome to ManpakBet!")} />
+                    )}
+                </motion.div>
+            </AnimatePresence>
+
+            <label className={cn("mt-5 flex cursor-pointer items-start gap-3 rounded-2xl border bg-white/2.5 p-3 transition", agreeError && !agree ? "border-destructive/60" : "border-border")}>
+                <Checkbox
+                    checked={agree}
+                    onCheckedChange={(value) => {
+                        setAgree(Boolean(value));
+                        setAgreeError(false);
+                    }}
+                    className="mt-0.5 border-white/30 data-[state=checked]:border-gold-400 data-[state=checked]:bg-gold-400 data-[state=checked]:text-[#2a1600]"
+                />
+                <span className="text-xs leading-relaxed text-muted-foreground">
+                    I confirm I am at least 21 years old, not a restricted person, and I agree to the{" "}
+                    <Link href="/terms" className="font-semibold text-gold-300 hover:underline">
+                        Terms
+                    </Link>{" "}
+                    and{" "}
+                    <Link href="/privacy" className="font-semibold text-gold-300 hover:underline">
+                        Privacy Policy
+                    </Link>
+                    .
+                </span>
+            </label>
         </div>
+    );
+}
+
+function MethodPill({ active, onClick, icon, label }: { active: boolean; onClick: () => void; icon: React.ReactNode; label: string }) {
+    return (
+        <button
+            type="button"
+            onClick={onClick}
+            className={cn(
+                "inline-flex h-9 items-center gap-2 rounded-full border px-3.5 text-xs font-bold transition [&_svg]:size-3.5",
+                active ? "border-gold-400/50 bg-gold-400/12 text-gold-200" : "border-border text-foreground/65 hover:text-foreground"
+            )}
+        >
+            {icon}
+            {label}
+        </button>
+    );
+}
+
+function PasswordLogin({ ensureAgreed, onDone }: { ensureAgreed: () => boolean; onDone: () => Promise<void> }) {
+    const form = useForm<LoginValues>({ resolver: zodResolver(loginSchema), defaultValues: { email: "", password: "" } });
+
+    const submit = form.handleSubmit(async (values) => {
+        if (!ensureAgreed()) return;
+        const result = await signIn("credentials", { ...values, redirect: false });
+        if (result?.error) {
+            AppToast.error("Login failed", { description: result.error === "CredentialsSignin" ? "Invalid email or password" : result.error });
+            return;
+        }
+        await onDone();
+    });
+
+    return (
+        <form onSubmit={submit} className="space-y-3.5" noValidate>
+            <AppTextField control={form.control} name="email" label="Email address" type="email" placeholder="you@example.com" autoComplete="email" />
+            <AppTextField control={form.control} name="password" label="Password" type="password" placeholder="••••••••" autoComplete="current-password" />
+            <AppButton type="submit" size="lg" block shine loading={form.formState.isSubmitting} leftIcon={<Lock />}>
+                Log in securely
+            </AppButton>
+        </form>
+    );
+}
+
+function OtpLogin({ ensureAgreed, onDone }: { ensureAgreed: () => boolean; onDone: () => Promise<void> }) {
+    const form = useForm<OtpValues>({ resolver: zodResolver(otpSchema), defaultValues: { phone: "", code: "" } });
+    const requestOtp = useRequestOtp();
+    const [cooldown, setCooldown] = React.useState(0);
+
+    React.useEffect(() => {
+        if (cooldown <= 0) return;
+        const timer = setTimeout(() => setCooldown((value) => value - 1), 1000);
+        return () => clearTimeout(timer);
+    }, [cooldown]);
+
+    const sendCode = async () => {
+        const valid = await form.trigger("phone");
+        if (!valid) return;
+        try {
+            const response = await requestOtp.mutateAsync(form.getValues("phone"));
+            setCooldown(60);
+            const devCode = response.data?.dev_code;
+            AppToast.success(response.message || "Verification code sent", { description: devCode ? `Development code: ${devCode}` : "Check your SMS inbox." });
+            if (devCode) form.setValue("code", devCode);
+        } catch (err) {
+            AppToast.apiError(err, "Could not send code");
+        }
+    };
+
+    const submit = form.handleSubmit(async (values) => {
+        if (!ensureAgreed()) return;
+        const result = await signIn("otp", { ...values, redirect: false });
+        if (result?.error) {
+            AppToast.error("Verification failed", { description: result.error === "CredentialsSignin" ? "Invalid code" : result.error });
+            return;
+        }
+        await onDone();
+    });
+
+    return (
+        <form onSubmit={submit} className="space-y-3.5" noValidate>
+            <AppTextField control={form.control} name="phone" label="Mobile number" type="tel" inputMode="tel" placeholder="0917 123 4567" prefix="🇵🇭" autoComplete="tel" />
+            <div className="grid grid-cols-[1fr_auto] items-end gap-2">
+                <AppTextField control={form.control} name="code" label="Verification code" inputMode="numeric" placeholder="6-digit code" autoComplete="one-time-code" />
+                <AppButton type="button" tone="surface" className="h-11" onClick={sendCode} loading={requestOtp.isPending} disabled={cooldown > 0}>
+                    {cooldown > 0 ? `Resend ${cooldown}s` : "Get code"}
+                </AppButton>
+            </div>
+            <AppButton type="submit" size="lg" block shine loading={form.formState.isSubmitting} leftIcon={<KeyRound />}>
+                Verify & continue
+            </AppButton>
+            <p className="text-center text-xs text-muted-foreground">New numbers are registered automatically after verification.</p>
+        </form>
+    );
+}
+
+function RegisterForm({ ensureAgreed, onDone }: { ensureAgreed: () => boolean; onDone: () => Promise<void> }) {
+    const form = useForm<RegisterValues>({
+        resolver: zodResolver(registerSchema),
+        defaultValues: { first_name: "", last_name: "", email: "", phone: "", password: "", password_confirmation: "" },
+    });
+    const register = useRegister();
+
+    const submit = form.handleSubmit(async (values) => {
+        if (!ensureAgreed()) return;
+        try {
+            await register.mutateAsync({
+                first_name: values.first_name,
+                last_name: values.last_name,
+                email: values.email,
+                password: values.password,
+                phone: values.phone || undefined,
+            });
+        } catch (err) {
+            const fields = apiFieldErrors(err);
+            Object.entries(fields).forEach(([key, message]) => form.setError(key as keyof RegisterValues, { message }));
+            AppToast.error("Registration failed", { description: apiError(err) });
+            return;
+        }
+
+        const result = await signIn("credentials", { email: values.email, password: values.password, redirect: false });
+        if (result?.error) {
+            AppToast.error("Account created, but sign-in failed", { description: "Please log in manually." });
+            return;
+        }
+        await onDone();
+    });
+
+    return (
+        <form onSubmit={submit} className="space-y-3.5" noValidate>
+            <div className="grid grid-cols-2 gap-3">
+                <AppTextField control={form.control} name="first_name" label="First name" placeholder="Juan" autoComplete="given-name" />
+                <AppTextField control={form.control} name="last_name" label="Last name" placeholder="Dela Cruz" autoComplete="family-name" />
+            </div>
+            <AppTextField control={form.control} name="email" label="Email address" type="email" placeholder="you@example.com" autoComplete="email" />
+            <AppTextField control={form.control} name="phone" label="Mobile number (optional)" type="tel" inputMode="tel" placeholder="0917 123 4567" prefix="🇵🇭" autoComplete="tel" />
+            <div className="grid gap-3 sm:grid-cols-2">
+                <AppTextField control={form.control} name="password" label="Password" type="password" placeholder="Min. 6 characters" autoComplete="new-password" />
+                <AppTextField control={form.control} name="password_confirmation" label="Confirm password" type="password" placeholder="Repeat password" autoComplete="new-password" />
+            </div>
+            <AppButton type="submit" size="lg" block shine loading={form.formState.isSubmitting}>
+                Create my account
+            </AppButton>
+        </form>
     );
 }

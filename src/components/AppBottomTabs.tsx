@@ -1,29 +1,70 @@
 "use client";
 
 import Link from "next/link";
-import { Home, Gamepad2, Trophy, User } from "lucide-react";
-
-const tabs = [
-    { href: "/", label: "Home", icon: Home },
-    { href: "/games", label: "Games", icon: Gamepad2 },
-    { href: "/promo", label: "Promo", icon: Trophy },
-    { href: "/account", label: "Account", icon: User },
-];
+import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
+import { Plus, UserPlus } from "lucide-react";
+import { bottomTabs } from "@/config/site";
+import { useAuth } from "@/hooks/useAuth";
+import { isActivePath } from "@/lib/navigation";
+import { cn } from "@/lib/utils";
+import { useUiStore } from "@/stores";
 
 export default function AppBottomTabs() {
+    const pathname = usePathname() ?? "/";
+    const { isAuthenticated } = useAuth();
+    const openAuth = useUiStore((state) => state.openAuth);
+    const openWallet = useUiStore((state) => state.openWallet);
+
+    const [left, right] = [bottomTabs.slice(0, 2), bottomTabs.slice(2)];
+
+    const renderTab = (tab: (typeof bottomTabs)[number]) => {
+        const active = isActivePath(pathname, tab.href);
+        const Icon = tab.icon;
+        const guarded = tab.href === "/account" && !isAuthenticated;
+
+        const content = (
+            <>
+                {active ? <motion.span layoutId="tab-active" className="absolute inset-x-3 -top-px h-0.5 rounded-full bg-gold shadow-[0_0_14px_rgba(255,194,61,0.8)]" /> : null}
+                <Icon className={cn("size-[22px] transition", active ? "text-gold-300" : "text-foreground/60")} />
+                <span className={cn("text-[10.5px] font-semibold", active ? "text-gold-200" : "text-foreground/60")}>{tab.label}</span>
+            </>
+        );
+
+        const className = "relative flex flex-1 flex-col items-center justify-center gap-1 py-2 active:scale-95 transition";
+
+        if (guarded) {
+            return (
+                <button key={tab.href} type="button" onClick={() => openAuth("login")} className={className}>
+                    {content}
+                </button>
+            );
+        }
+
+        return (
+            <Link key={tab.href} href={tab.href} className={className}>
+                {content}
+            </Link>
+        );
+    };
+
     return (
-        <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-white/10 bg-black/30 backdrop-blur-xl lg:hidden">
-            <div className="mx-auto grid max-w-[700px] grid-cols-4 px-2 py-2">
-                {tabs.map((t) => {
-                    const Icon = t.icon;
-                    return (
-                        <Link key={t.href} href={t.href} className="flex flex-col items-center gap-1 rounded-2xl px-2 py-2 text-white/75 hover:bg-white/10">
-                            <Icon className="h-5 w-5" />
-                            <span className="text-[11px]">{t.label}</span>
-                        </Link>
-                    );
-                })}
+        <nav className="glass pb-safe fixed inset-x-0 bottom-0 z-40 border-t border-border lg:hidden">
+            <div className="mx-auto flex h-16 max-w-xl items-stretch px-2">
+                {left.map(renderTab)}
+                <div className="relative flex w-20 shrink-0 justify-center">
+                    <button
+                        type="button"
+                        onClick={() => (isAuthenticated ? openWallet("deposit") : openAuth("register"))}
+                        className="bg-gold ring-gold absolute -top-5 grid size-14 animate-pulse-ring place-items-center rounded-2xl border-4 border-plum-950 text-[#2a1600] transition active:scale-95"
+                        aria-label={isAuthenticated ? "Deposit" : "Join now"}
+                    >
+                        {isAuthenticated ? <Plus className="size-6" strokeWidth={2.75} /> : <UserPlus className="size-6" strokeWidth={2.5} />}
+                    </button>
+                    <span className="absolute bottom-2 text-[10.5px] font-bold text-gold-200">{isAuthenticated ? "Deposit" : "Join"}</span>
+                </div>
+                {right.map(renderTab)}
             </div>
-        </div>
+        </nav>
     );
 }

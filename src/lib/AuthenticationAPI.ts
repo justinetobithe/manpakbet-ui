@@ -1,65 +1,49 @@
 "use client";
 
-import { api } from "./api";
-import apiError from "@/lib/apiError";
-import { useMutation } from "@tanstack/react-query";
-import { toast } from "@/lib/toast";
-import Response from "@/types/Response";
-import { signIn, signOut } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { signOut } from "next-auth/react";
+import { api, resetApiSession } from "@/lib/api";
+import type { ApiEnvelope } from "@/types/Api";
 
 export type RegisterInputs = {
     email: string;
     password: string;
+    first_name?: string;
+    last_name?: string;
+    phone?: string;
 };
 
-export const register = async (inputs: RegisterInputs): Promise<Response> => {
-    try {
-        const { data } = await api.post<Response>("/api/register", inputs);
-        return data;
-    } catch (err) {
-        return { success: false, message: apiError(err) ?? "Registration failed" } as Response;
-    }
+type OtpResponse = ApiEnvelope<{ expires_in: number; dev_code?: string | null }>;
+
+export const register = async (inputs: RegisterInputs) => {
+    const { data } = await api.post("/auth/register", inputs);
+    return data;
 };
 
-export const useRegister = () => {
-    const router = useRouter();
-
-    return useMutation({
-        mutationFn: async ({ inputs }: { inputs: RegisterInputs }): Promise<Response> => {
-            return await register(inputs);
-        },
-        onSuccess: async (data: Response, { inputs }) => {
-            if (!data.success) {
-                toast({ description: data.message, variant: "destructive" });
-                return;
-            }
-
-            toast({ description: data.message, variant: "success", duration: 800 });
-
-            const res = await signIn("credentials", { ...inputs, redirect: false });
-            if (res?.error) {
-                toast({ description: res.error, variant: "destructive" });
-                return;
-            }
-
-            router.refresh();
-            router.push("/user/dashboard");
-        },
-    });
+export const requestOtp = async (phone: string) => {
+    const { data } = await api.post<OtpResponse>("/auth/otp/request", { phone });
+    return data;
 };
 
-export const logout = async (): Promise<void> => {
-    await api.post("/api/logout");
+export const logout = async () => {
+    await api.post("/auth/logout");
 };
+
+export const useRegister = () => useMutation({ mutationFn: register });
+
+export const useRequestOtp = () => useMutation({ mutationFn: requestOtp });
 
 export const useLogout = () => {
+    const queryClient = useQueryClient();
+
     return useMutation({
         mutationFn: async () => {
-            return await logout();
+            await logout().catch(() => undefined);
         },
-        onSettled: () => {
-            signOut({ callbackUrl: "/login" });
+        onSettled: async () => {
+            resetApiSession();
+            queryClient.clear();
+            await signOut({ callbackUrl: "/" });
         },
     });
 };
