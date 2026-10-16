@@ -31,6 +31,7 @@ export default function WalletForm({ tab, onTabChange, onDone, compact }: Wallet
     const balance = wallet?.balance ?? 0;
     const preferredMethod = useWalletStore((state) => state.preferredMethod);
     const setPreferredMethod = useWalletStore((state) => state.setPreferredMethod);
+    const selectedMethod: PaymentMethod = paymentMethods.some((method) => method.id === preferredMethod) ? preferredMethod : "gcash";
     const savedName = useWalletStore((state) => state.savedAccountName);
     const savedNumber = useWalletStore((state) => state.savedAccountNumber);
     const rememberAccount = useWalletStore((state) => state.rememberAccount);
@@ -81,7 +82,7 @@ export default function WalletForm({ tab, onTabChange, onDone, compact }: Wallet
         try {
             const response = await mutation.mutateAsync({
                 amount: values.amount,
-                method: preferredMethod,
+                method: selectedMethod,
                 account_name: values.account_name || undefined,
                 account_number: values.account_number || undefined,
             });
@@ -151,21 +152,29 @@ export default function WalletForm({ tab, onTabChange, onDone, compact }: Wallet
             <form onSubmit={submit} className="space-y-4" noValidate>
                 <div>
                     <div className="mb-2 text-xs font-semibold text-foreground/80">Payment channel</div>
-                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                        {paymentMethods.map((method) => (
-                            <button
-                                key={method.id}
-                                type="button"
-                                onClick={() => setPreferredMethod(method.id as PaymentMethod)}
-                                className={cn(
-                                    "rounded-xl border bg-linear-to-br px-3 py-2.5 text-xs font-bold transition",
-                                    method.tone,
-                                    preferredMethod === method.id ? "border-gold-400/70 ring-2 ring-gold-400/25" : "border-border opacity-75 hover:opacity-100"
-                                )}
-                            >
-                                {method.label}
-                            </button>
-                        ))}
+                    <div className="grid grid-cols-2 gap-2.5">
+                        {paymentMethods.map((method) => {
+                            const active = selectedMethod === method.id;
+                            return (
+                                <button
+                                    key={method.id}
+                                    type="button"
+                                    onClick={() => setPreferredMethod(method.id as PaymentMethod)}
+                                    aria-pressed={active}
+                                    className={cn(
+                                        "relative flex items-center gap-3 rounded-2xl border p-2.5 text-left transition",
+                                        active ? "border-gold-400/70 bg-gold-400/10 ring-2 ring-gold-400/25" : "border-border bg-white/3 hover:border-white/25"
+                                    )}
+                                >
+                                    <img src={method.logo} alt="" className={cn("size-11 shrink-0 rounded-xl bg-white object-contain p-1", active && `ring-2 ${method.ring}`)} />
+                                    <span className="min-w-0">
+                                        <span className="block text-sm font-bold">{method.label}</span>
+                                        <span className="block truncate text-[11px] text-muted-foreground">{method.hint}</span>
+                                    </span>
+                                    {active ? <CheckCircle2 className="absolute top-2 right-2 size-4 text-gold-300" /> : null}
+                                </button>
+                            );
+                        })}
                     </div>
                 </div>
 

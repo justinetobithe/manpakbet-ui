@@ -10,6 +10,7 @@ import { useBanners, usePosts, usePromotions } from "@/lib/ContentAPI";
 import { useGameStore } from "@/stores";
 import CategoryTiles from "./CategoryTiles";
 import FeatureBand from "./FeatureBand";
+import HotSpotlight from "./HotSpotlight";
 import HeroCarousel from "./HeroCarousel";
 import LobbyStats from "./LobbyStats";
 import PostCard from "./PostCard";
@@ -46,6 +47,8 @@ export default function HomeLanding() {
                 <CategoryTiles categories={categories.data} loading={categories.isLoading} />
             </div>
 
+            <HotSpotlight />
+
             <LobbyStats games={totalGames} providers={providers.data?.length ?? 0} categories={categories.data?.length ?? 0} promotions={promotions.data?.length ?? 0} />
 
             {recentOrdered?.length ? (
@@ -65,7 +68,7 @@ export default function HomeLanding() {
             ) : null}
 
             {categories.data
-                ?.filter((category) => category.games?.length)
+                ?.filter((category) => category.slug !== "popular" && category.games?.length)
                 .map((category) => (
                     <AppSection key={category.id} title={category.name} subtitle={`${category.games_count ?? 0} games`} icon={<Trophy />} href={`/games/${category.slug}`}>
                         <GameRail games={category.games} />

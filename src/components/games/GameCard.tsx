@@ -44,7 +44,7 @@ export default function GameCard({ game, className, index = 0 }: GameCardProps) 
             >
                 <div className="relative aspect-[4/5]">
                     <AppImage src={gameImage(game)} alt={game.name} wrapperClassName="absolute inset-0" className="transition duration-500 group-hover:scale-[1.06]" />
-                    <div className="absolute inset-0 bg-linear-to-t from-black/85 via-black/10 to-transparent" />
+                    <div className="absolute inset-0 bg-black/0 transition duration-300 group-hover:bg-black/40" />
 
                     {badge ? (
                         <span className={cn("absolute top-2 left-2 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-extrabold tracking-wide uppercase shadow-lg", badge.className)}>
@@ -59,12 +59,12 @@ export default function GameCard({ game, className, index = 0 }: GameCardProps) 
                         </span>
                     </div>
 
-                    <div className="absolute inset-x-0 bottom-0 p-2.5">
-                        <div className="line-clamp-2 text-[13px] leading-tight font-bold text-white drop-shadow">{game.name}</div>
-                        <div className="mt-1 flex items-center justify-between gap-2 text-[10px] font-semibold text-white/60">
-                            <span className="truncate uppercase">{providerName ?? game.category?.name ?? "ManpakBet"}</span>
-                            {game.plays_count ? <span className="shrink-0">{formatCompact(game.plays_count)} plays</span> : null}
-                        </div>
+                </div>
+                <div className="px-2.5 pt-2 pb-2.5">
+                    <div className="truncate text-[13px] leading-tight font-bold text-foreground transition group-hover:text-gold-200">{game.name}</div>
+                    <div className="mt-1 flex items-center justify-between gap-2 text-[10px] font-semibold text-muted-foreground">
+                        <span className="truncate uppercase">{providerName ?? game.category?.name ?? "ManpakBet"}</span>
+                        {game.plays_count ? <span className="hidden shrink-0 sm:inline">{formatCompact(game.plays_count)}</span> : null}
                     </div>
                 </div>
             </Link>
@@ -86,5 +86,5 @@ export default function GameCard({ game, className, index = 0 }: GameCardProps) 
 }
 
 export function GameCardSkeleton({ className }: { className?: string }) {
-    return <div className={cn("aspect-[4/5] animate-pulse rounded-2xl bg-white/5", className)} />;
+    return <div className={cn("aspect-[2/3] animate-pulse rounded-2xl bg-white/5", className)} />;
 }

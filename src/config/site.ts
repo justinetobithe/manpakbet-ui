@@ -148,10 +148,8 @@ export const footerLinks = [
 ];
 
 export const paymentMethods = [
-    { id: "gcash", label: "GCash", tone: "from-sky-500/25 to-sky-400/5 text-sky-200" },
-    { id: "maya", label: "Maya", tone: "from-emerald-500/25 to-emerald-400/5 text-emerald-200" },
-    { id: "qrph", label: "QR Ph", tone: "from-fuchsia-500/25 to-fuchsia-400/5 text-fuchsia-200" },
-    { id: "bank", label: "Bank Transfer", tone: "from-amber-500/25 to-amber-400/5 text-amber-200" },
+    { id: "gcash", label: "GCash", logo: "/gcash.png", hint: "Instant e-wallet transfer", ring: "ring-sky-400/60" },
+    { id: "maya", label: "Maya", logo: "/maya.png", hint: "Pay with your Maya wallet", ring: "ring-emerald-400/60" },
 ] as const;
 
 export const BACKOFFICE_ROLES = ["admin", "staff"];

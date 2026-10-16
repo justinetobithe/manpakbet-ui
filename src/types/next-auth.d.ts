@@ -14,6 +14,7 @@ declare module "next-auth" {
             role: Role;
             permissions: Permission[];
             auth_token: string;
+            token_expires_at: string | null;
         };
     }
 
@@ -27,6 +28,7 @@ declare module "next-auth" {
         role: Role;
         permissions: Permission[];
         auth_token: string;
+        token_expires_at: string | null;
     }
 }
 
@@ -41,5 +43,7 @@ declare module "next-auth/jwt" {
         role?: Role;
         permissions?: Permission[];
         auth_token?: string;
+        token_expires_at?: string | null;
+        expired?: boolean;
     }
 }

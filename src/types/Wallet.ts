@@ -2,7 +2,7 @@ export type TransactionType = "deposit" | "withdraw" | "bonus" | "adjustment";
 
 export type TransactionStatus = "pending" | "approved" | "rejected";
 
-export type PaymentMethod = "gcash" | "maya" | "bank" | "qrph";
+export type PaymentMethod = "gcash" | "maya";
 
 export type Transaction = {
     id: number;

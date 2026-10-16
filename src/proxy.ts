@@ -1,5 +1,6 @@
 import { getToken } from "next-auth/jwt";
 import { NextResponse, type NextRequest } from "next/server";
+import { isTokenExpired } from "@/lib/tokenExpiry";
 
 const AUTH_PAGES = ["/login", "/register"];
 const PLAYER_PAGES = ["/account"];
@@ -19,17 +20,20 @@ const ADMIN_ROUTE_PERMISSIONS: Array<[string, string]> = [
 
 const startsWith = (pathname: string, prefix: string) => pathname === prefix || pathname.startsWith(`${prefix}/`);
 
-const redirectTo = (request: NextRequest, pathname: string, withCallback = false) => {
+const redirectTo = (request: NextRequest, pathname: string, withCallback = false, expired = false) => {
     const url = request.nextUrl.clone();
     url.pathname = pathname;
     url.search = "";
     if (withCallback) url.searchParams.set("callbackUrl", `${request.nextUrl.pathname}${request.nextUrl.search}`);
+    if (expired) url.searchParams.set("expired", "1");
     return NextResponse.redirect(url);
 };
 
 export async function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl;
-    const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET });
+    const rawToken = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET });
+    const expired = Boolean(rawToken && (!rawToken.auth_token || isTokenExpired(rawToken.token_expires_at)));
+    const token = expired ? null : rawToken;
     const permissions = (token?.permissions ?? []) as string[];
     const isBackoffice = token?.role === "admin" || token?.role === "staff" || permissions.length > 0;
 
@@ -39,12 +43,12 @@ export async function proxy(request: NextRequest) {
     }
 
     if (PLAYER_PAGES.some((page) => startsWith(pathname, page))) {
-        if (!token) return redirectTo(request, "/login", true);
+        if (!token) return redirectTo(request, "/login", true, expired);
         return NextResponse.next();
     }
 
     if (startsWith(pathname, ADMIN_PREFIX)) {
-        if (!token) return redirectTo(request, "/login", true);
+        if (!token) return redirectTo(request, "/login", true, expired);
         if (!isBackoffice) return redirectTo(request, "/unauthorized");
 
         const required = ADMIN_ROUTE_PERMISSIONS.find(([prefix]) => startsWith(pathname, prefix))?.[1];

@@ -201,8 +201,6 @@ export default function AdminTransactionsPage() {
                                     <SelectItem value="all">All channels</SelectItem>
                                     <SelectItem value="gcash">GCash</SelectItem>
                                     <SelectItem value="maya">Maya</SelectItem>
-                                    <SelectItem value="qrph">QR Ph</SelectItem>
-                                    <SelectItem value="bank">Bank</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>

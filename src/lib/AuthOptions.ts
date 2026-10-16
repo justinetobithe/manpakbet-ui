@@ -1,6 +1,7 @@
 import type { NextAuthOptions, User as AuthUser } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
+import { isTokenExpired } from "@/lib/tokenExpiry";
 import type { Permission, Role } from "@/types/User";
 
 type ApiUser = {
@@ -17,7 +18,7 @@ type ApiUser = {
 type ApiAuthResponse = {
     status: "success" | "error";
     message: string;
-    data: { token: string; user: ApiUser };
+    data: { token: string; expires_at?: string | null; user: ApiUser };
 };
 
 const API_URL = (process.env.NEXT_PUBLIC_API_URL ?? "").replace(/\/+$/, "");
@@ -51,6 +52,7 @@ const toSessionUser = ({ data }: ApiAuthResponse): AuthUser => ({
     role: data.user.role ?? "user",
     permissions: data.user.permissions ?? [],
     auth_token: data.token,
+    token_expires_at: data.expires_at ?? null,
 });
 
 const providers: NextAuthOptions["providers"] = [
@@ -103,6 +105,11 @@ const AuthOptions: NextAuthOptions = {
                 Object.assign(token, { first_name, last_name, email, phone, name });
             }
 
+            if (token.auth_token && isTokenExpired(token.token_expires_at)) {
+                token.auth_token = "";
+                token.expired = true;
+            }
+
             return token;
         },
         async session({ session, token }) {
@@ -116,6 +123,7 @@ const AuthOptions: NextAuthOptions = {
                 role: token.role ?? "user",
                 permissions: token.permissions ?? [],
                 auth_token: token.auth_token ?? "",
+                token_expires_at: token.token_expires_at ?? null,
             };
             return session;
         },
