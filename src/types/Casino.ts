@@ -31,6 +31,8 @@ export type Game = {
     thumbnail?: string | null;
     banner?: string | null;
     launch_url?: string | null;
+    provider_game_code?: string | null;
+    has_demo?: boolean;
     badge?: GameBadge | null;
     is_featured: boolean;
     plays_count: number;
@@ -53,8 +55,24 @@ export type GameFilters = {
     per_page?: number;
 };
 
+export type GameMode = "real" | "demo";
+
 export type GameLaunch = {
+    session: { token: string; mode: GameMode; expires_at: string };
     game: Game;
     launch_url?: string | null;
+    provider: { key: string; name: string; connected: boolean };
     balance: number;
+};
+
+export type GameRound = {
+    id: number;
+    round_id?: string | null;
+    type: "bet" | "win" | "refund";
+    amount: string;
+    balance_before: string;
+    balance_after: string;
+    status: "completed" | "rolled_back";
+    created_at: string;
+    game?: Pick<Game, "id" | "name" | "slug" | "thumbnail" | "banner"> | null;
 };

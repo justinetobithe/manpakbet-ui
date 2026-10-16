@@ -69,7 +69,8 @@ export const bottomTabs: NavItem[] = [
 export const accountNav: NavItem[] = [
     { label: "Overview", href: "/account", icon: LayoutDashboard },
     { label: "Wallet", href: "/account/wallet", icon: Wallet },
-    { label: "History", href: "/account/transactions", icon: History },
+    { label: "Transactions", href: "/account/transactions", icon: History },
+    { label: "Game history", href: "/account/games", icon: Dices },
     { label: "Profile", href: "/account/profile", icon: UserRound },
 ];
 

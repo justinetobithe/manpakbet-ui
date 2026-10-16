@@ -3,40 +3,28 @@
 import * as React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ChevronLeft, Expand, Heart, Layers, Play, Share2, Users, X } from "lucide-react";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { AppAmount, AppBadge, AppButton, AppEmpty, AppImage, AppSection, AppToast } from "@/components/app";
+import { useRouter } from "next/navigation";
+import { ChevronLeft, Gamepad2, Heart, Layers, Play, Share2, Users } from "lucide-react";
+import { AppBadge, AppButton, AppEmpty, AppImage, AppSection, AppToast } from "@/components/app";
 import { useAuth } from "@/hooks/useAuth";
-import { gameImage, toAssetUrl } from "@/lib/assets";
-import { useGame, useLaunchGame } from "@/lib/CasinoAPI";
+import { gameImage } from "@/lib/assets";
+import { useGame } from "@/lib/CasinoAPI";
 import { formatCompact, titleCase } from "@/lib/format";
 import { cn } from "@/lib/utils";
-import { useGameStore, useUiStore } from "@/stores";
-import type { GameLaunch } from "@/types/Casino";
+import { useGameStore } from "@/stores";
+import type { GameMode } from "@/types/Casino";
 import GameRail from "./GameRail";
 
 export default function GameDetail({ slug }: { slug: string }) {
+    const router = useRouter();
     const { data, isLoading, isError } = useGame(slug);
     const { requireAuth } = useAuth();
-    const launch = useLaunchGame();
-    const pushRecent = useGameStore((state) => state.pushRecent);
     const favorite = useGameStore((state) => state.favorites.includes(slug));
     const toggleFavorite = useGameStore((state) => state.toggleFavorite);
-    const openWallet = useUiStore((state) => state.openWallet);
-    const [session, setSession] = React.useState<GameLaunch | null>(null);
 
     const game = data?.data;
 
-    const play = () =>
-        requireAuth(async () => {
-            try {
-                const result = await launch.mutateAsync(slug);
-                pushRecent(slug);
-                setSession(result);
-            } catch (err) {
-                AppToast.apiError(err, "Unable to start game");
-            }
-        });
+    const play = (mode: GameMode) => requireAuth(() => router.push(`/play/${slug}/launch${mode === "demo" ? "?mode=demo" : ""}`));
 
     const share = async () => {
         const url = window.location.href;
@@ -76,7 +64,6 @@ export default function GameDetail({ slug }: { slug: string }) {
 
     const image = gameImage(game);
     const providerName = game.provider_ref?.name ?? game.provider;
-    const embeddable = Boolean(session?.launch_url && /^https?:\/\//i.test(session.launch_url));
 
     return (
         <div className="space-y-10">
@@ -114,9 +101,14 @@ export default function GameDetail({ slug }: { slug: string }) {
                             </span>
                         </div>
                         <div className="flex flex-wrap justify-center gap-2 pt-2 md:justify-start">
-                            <AppButton size="xl" shine leftIcon={<Play className="fill-current" />} onClick={play} loading={launch.isPending}>
+                            <AppButton size="xl" shine leftIcon={<Play className="fill-current" />} onClick={() => play("real")}>
                                 Play now
                             </AppButton>
+                            {game.has_demo !== false ? (
+                                <AppButton size="xl" tone="outline" leftIcon={<Gamepad2 />} onClick={() => play("demo")}>
+                                    Try demo
+                                </AppButton>
+                            ) : null}
                             <AppButton
                                 size="xl"
                                 tone="surface"
@@ -140,52 +132,6 @@ export default function GameDetail({ slug }: { slug: string }) {
                 </AppSection>
             ) : null}
 
-            <Dialog open={Boolean(session)} onOpenChange={(open) => (!open ? setSession(null) : undefined)}>
-                <DialogContent className="flex h-[100dvh] w-screen max-w-none flex-col gap-0 rounded-none border-0 bg-plum-950 p-0 sm:h-[90dvh] sm:w-[94vw] sm:max-w-6xl sm:rounded-3xl sm:border sm:border-border [&>button]:hidden">
-                    <DialogTitle className="sr-only">{game.name}</DialogTitle>
-                    <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-3">
-                        <div className="flex min-w-0 items-center gap-3">
-                            <AppImage src={image} alt="" wrapperClassName="size-9 shrink-0 rounded-lg" />
-                            <div className="min-w-0">
-                                <div className="truncate text-sm font-bold">{game.name}</div>
-                                <div className="text-xs text-muted-foreground">
-                                    Balance <AppAmount value={session?.balance} className="font-semibold text-gold-200" />
-                                </div>
-                            </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <AppButton size="sm" onClick={() => openWallet("deposit")}>
-                                Deposit
-                            </AppButton>
-                            {embeddable ? (
-                                <AppButton size="icon-sm" tone="ghost" onClick={() => document.getElementById("game-frame")?.requestFullscreen?.()} aria-label="Fullscreen">
-                                    <Expand />
-                                </AppButton>
-                            ) : null}
-                            <AppButton size="icon-sm" tone="surface" onClick={() => setSession(null)} aria-label="Close game">
-                                <X />
-                            </AppButton>
-                        </div>
-                    </div>
-                    <div className="relative min-h-0 flex-1">
-                        {embeddable ? (
-                            <iframe id="game-frame" src={session?.launch_url ?? undefined} title={game.name} className="h-full w-full" allow="fullscreen; autoplay" />
-                        ) : (
-                            <div className="relative flex h-full flex-col items-center justify-center gap-5 overflow-hidden p-6 text-center">
-                                <img src={toAssetUrl(image)} alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover opacity-25 blur-xl" />
-                                <motion.div animate={{ rotate: 360 }} transition={{ duration: 14, ease: "linear", repeat: Infinity }} className="relative size-28 rounded-full border-4 border-dashed border-gold-400/50" />
-                                <div className="relative space-y-2">
-                                    <div className="font-display text-2xl font-extrabold">Your table is ready</div>
-                                    <p className="max-w-md text-sm text-muted-foreground">
-                                        This title&apos;s game server is being connected. Your session has been registered and the game will open here once the studio
-                                        integration is live.
-                                    </p>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                </DialogContent>
-            </Dialog>
         </div>
     );
 }

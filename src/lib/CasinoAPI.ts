@@ -3,7 +3,7 @@
 import { keepPreviousData, useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import type { ApiEnvelope, ApiPaginated } from "@/types/Api";
-import type { Game, GameCategory, GameFilters, GameLaunch, GameProvider } from "@/types/Casino";
+import type { Game, GameCategory, GameFilters, GameLaunch, GameMode, GameProvider, GameRound } from "@/types/Casino";
 
 export const casinoKeys = {
     all: ["casino"] as const,
@@ -46,9 +46,18 @@ export const getGame = async (slug: string) => {
     return data;
 };
 
-export const launchGame = async (slug: string) => {
-    const { data } = await api.post<ApiEnvelope<GameLaunch>>(`/casino/games/${encodeURIComponent(slug)}/launch`);
-    return data.data;
+export const launchGame = async ({ slug, mode }: { slug: string; mode: GameMode }) => {
+    const { data } = await api.post<ApiEnvelope<GameLaunch>>(`/casino/games/${encodeURIComponent(slug)}/launch`, { mode });
+    return data;
+};
+
+export const endGameSession = async (token: string) => {
+    await api.post("/casino/sessions/end", { token });
+};
+
+export const getRounds = async (page = 1, perPage = 15) => {
+    const { data } = await api.get<ApiPaginated<GameRound>>("/casino/rounds", { params: { page, per_page: perPage } });
+    return data;
 };
 
 export const useCategories = (withGames = false) =>
@@ -100,3 +109,12 @@ export const useGame = (slug: string) =>
     });
 
 export const useLaunchGame = () => useMutation({ mutationFn: launchGame });
+
+export const useEndGameSession = () => useMutation({ mutationFn: endGameSession });
+
+export const useRounds = (page = 1, perPage = 15) =>
+    useQuery({
+        queryKey: ["casino", "rounds", page, perPage],
+        queryFn: () => getRounds(page, perPage),
+        placeholderData: keepPreviousData,
+    });

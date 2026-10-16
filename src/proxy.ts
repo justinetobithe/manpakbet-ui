@@ -42,7 +42,7 @@ export async function proxy(request: NextRequest) {
         return NextResponse.next();
     }
 
-    if (PLAYER_PAGES.some((page) => startsWith(pathname, page))) {
+    if (PLAYER_PAGES.some((page) => startsWith(pathname, page)) || /^\/play\/[^/]+\/launch\/?$/.test(pathname)) {
         if (!token) return redirectTo(request, "/login", true, expired);
         return NextResponse.next();
     }
