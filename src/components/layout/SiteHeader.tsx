@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
@@ -19,9 +20,17 @@ export default function SiteHeader() {
     const openAuth = useUiStore((state) => state.openAuth);
     const setMobileNav = useUiStore((state) => state.setMobileNav);
     const setSearch = useUiStore((state) => state.setSearch);
+    const [scrolled, setScrolled] = React.useState(false);
+
+    React.useEffect(() => {
+        const onScroll = () => setScrolled(window.scrollY > 8);
+        onScroll();
+        window.addEventListener("scroll", onScroll, { passive: true });
+        return () => window.removeEventListener("scroll", onScroll);
+    }, []);
 
     return (
-        <header className="glass sticky top-0 z-50 border-b border-border">
+        <header className={cn("bar sticky top-0 z-50 border-b border-border transition-shadow duration-300", scrolled && "shadow-[0_10px_30px_-14px_rgba(20,10,40,0.35)]")}>
             <div className="mx-auto flex h-16 max-w-350 items-center gap-2 px-3 sm:gap-4 sm:px-5">
                 <button
                     type="button"

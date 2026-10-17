@@ -18,8 +18,8 @@ export default function AccountShell({ children }: { children: React.ReactNode }
     const name = user?.name || user?.email || user?.phone || "Player";
 
     return (
-        <div className="grid gap-5 lg:grid-cols-[280px_1fr] lg:gap-6">
-            <aside className="space-y-3 lg:sticky lg:top-24 lg:self-start">
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-[280px_1fr] lg:gap-6">
+            <aside className="min-w-0 space-y-3 lg:sticky lg:top-24 lg:self-start">
                 <div className="border-gradient relative overflow-hidden rounded-3xl bg-linear-to-br from-plum-700 via-plum-850 to-plum-900 p-5">
                     <div className="pointer-events-none absolute -top-10 -right-10 size-40 rounded-full bg-gold-400/15 blur-2xl" />
                     <div className="relative flex items-center gap-3">

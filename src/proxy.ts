@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { isTokenExpired } from "@/lib/tokenExpiry";
 
 const AUTH_PAGES = ["/login", "/register"];
-const PLAYER_PAGES = ["/account"];
+const PLAYER_PAGES = ["/account", "/pay"];
 const ADMIN_PREFIX = "/admin";
 
 const ADMIN_ROUTE_PERMISSIONS: Array<[string, string]> = [

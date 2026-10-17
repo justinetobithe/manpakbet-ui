@@ -19,7 +19,7 @@ export default function WalletPage() {
     return (
         <div className="space-y-5">
             <AppPageHeader icon={<Wallet />} title="Wallet" description="Top up or cash out through your preferred channel." />
-            <div className="grid gap-5 xl:grid-cols-[1.4fr_1fr]">
+            <div className="grid grid-cols-1 gap-5 xl:grid-cols-[1.4fr_1fr]">
                 <AppCard>
                     <WalletForm tab={tab} onTabChange={setTab} />
                 </AppCard>

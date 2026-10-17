@@ -25,6 +25,7 @@ import {
     UserRound,
     Users,
     Wallet,
+    WalletCards,
     type LucideIcon,
 } from "lucide-react";
 import type { Permission } from "@/types/User";
@@ -71,6 +72,7 @@ export const bottomTabs: NavItem[] = [
 export const accountNav: NavItem[] = [
     { label: "Overview", href: "/account", icon: LayoutDashboard },
     { label: "Wallet", href: "/account/wallet", icon: Wallet },
+    { label: "Payout accounts", href: "/account/payouts", icon: WalletCards },
     { label: "History", href: "/account/history", icon: History },
     { label: "Verification", href: "/account/verification", icon: BadgeCheck },
     { label: "Profile", href: "/account/profile", icon: UserRound },

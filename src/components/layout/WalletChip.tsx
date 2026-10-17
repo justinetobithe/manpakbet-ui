@@ -16,7 +16,7 @@ export default function WalletChip({ className }: { className?: string }) {
         <div className={cn("flex items-center rounded-2xl border border-border bg-fg/5 p-1 pl-3", className)}>
             <div className="flex items-center gap-1.5">
                 <span className="hidden text-[10px] font-bold tracking-wider text-muted-foreground uppercase xl:inline">Balance</span>
-                <AppAmount value={data?.balance} className="text-sm font-bold text-gold-200" />
+                <AppAmount value={data?.balance} countUp className="text-sm font-bold text-gold-200" />
                 <button
                     type="button"
                     onClick={toggleHidden}

@@ -8,6 +8,7 @@ import { Toaster } from "sonner";
 import { resetApiSession } from "@/lib/api";
 import { isTokenExpired, tokenExpiresIn } from "@/lib/tokenExpiry";
 import { rehydrateStores, useAuthStore } from "@/stores";
+import RealtimeSync from "./RealtimeSync";
 
 function makeQueryClient() {
     return new QueryClient({
@@ -112,6 +113,7 @@ export default function AppProviders({ children }: { children: React.ReactNode }
                 <QueryClientProvider client={queryClient}>
                     <StoreHydrator />
                     <AuthSync />
+                    <RealtimeSync />
                     {children}
                     <ThemedToaster />
                 </QueryClientProvider>

@@ -121,7 +121,7 @@ export default function GameEditor({ id }: { id?: number }) {
 
     if (editing && detail.isLoading) {
         return (
-            <div className="grid gap-5 lg:grid-cols-[1fr_360px]">
+            <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1fr_360px]">
                 <div className="h-[600px] animate-pulse rounded-2xl bg-fg/5" />
                 <div className="h-[600px] animate-pulse rounded-2xl bg-fg/5" />
             </div>
@@ -177,7 +177,7 @@ export default function GameEditor({ id }: { id?: number }) {
                 </div>
             </div>
 
-            <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_360px]">
+            <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_360px]">
                 <div className="space-y-5">
                     <AppCard title="Game details" icon={<Gamepad2 />}>
                         <div className="grid gap-4 sm:grid-cols-2">

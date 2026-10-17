@@ -28,7 +28,7 @@ export default function PostDetail({ slug }: { slug: string }) {
     }
 
     return (
-        <div className="grid gap-8 lg:grid-cols-[1fr_320px]">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_320px]">
             <motion.article initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
                 <Link href="/news" className="inline-flex items-center gap-1 text-sm font-semibold text-muted-foreground hover:text-foreground">
                     <ChevronLeft className="size-4" /> News

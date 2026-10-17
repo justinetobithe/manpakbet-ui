@@ -47,7 +47,7 @@ export type WalletSummary = {
         max_withdraw: number;
         methods: PaymentMethod[];
     };
-    channels: Array<{ id: PaymentMethod; account_name?: string | null; account_number?: string | null }>;
+    channels: PaymentChannel[];
     kyc_status: KycStatus;
     require_kyc_for_withdraw: boolean;
 };
@@ -62,9 +62,42 @@ export type HistorySummary = {
     balance: number;
 };
 
-export type WalletRequest = {
+export type DepositRequest = {
     amount: number;
     method: PaymentMethod;
     account_name?: string;
     account_number?: string;
+};
+
+export type WithdrawRequest = {
+    amount: number;
+    payout_account_id: number;
+};
+
+export type PayoutAccount = {
+    id: number;
+    method: PaymentMethod;
+    account_name: string;
+    masked_account_number: string;
+    is_default: boolean;
+    created_at: string;
+};
+
+export type PayoutAccountInput = {
+    method: PaymentMethod;
+    account_name: string;
+    account_number: string;
+    is_default?: boolean;
+};
+
+export type PaymentChannel = {
+    id: PaymentMethod;
+    account_name?: string | null;
+    account_number?: string | null;
+    qr?: string | null;
+};
+
+export type TransactionDetail = {
+    transaction: Transaction;
+    channel?: PaymentChannel | null;
 };

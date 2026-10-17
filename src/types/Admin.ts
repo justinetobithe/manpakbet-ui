@@ -84,9 +84,11 @@ export type AppSettings = {
         gcash_enabled: boolean;
         gcash_account_name: string;
         gcash_account_number: string;
+        gcash_qr: string;
         maya_enabled: boolean;
         maya_account_name: string;
         maya_account_number: string;
+        maya_qr: string;
         require_kyc_for_withdraw: boolean;
         min_deposit: number;
         max_deposit: number;

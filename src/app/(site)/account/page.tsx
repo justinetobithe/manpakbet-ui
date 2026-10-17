@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowDownToLine, ArrowUpFromLine, Clock3, Gamepad2, Heart, History, TrendingDown, TrendingUp, Wallet } from "lucide-react";
+import { ArrowDownToLine, ArrowUpFromLine, ChevronRight, Clock3, Gamepad2, Heart, History, ScanFace, TrendingDown, TrendingUp, Wallet } from "lucide-react";
 import { AppAmount, AppButton, AppCard, AppEmpty, AppStatCard } from "@/components/app";
 import { TransactionRow } from "@/components/account/TransactionList";
 import GameRail from "@/components/games/GameRail";
@@ -35,8 +35,30 @@ export default function AccountOverviewPage() {
                 </div>
             </div>
 
+            {wallet && wallet.kyc_status !== "verified" ? (
+                <Link
+                    href="/account/verification"
+                    className="group flex items-center gap-3 rounded-2xl border border-warning/40 bg-warning/10 p-4 transition hover:border-warning/70"
+                >
+                    <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-warning/20 text-amber-300">
+                        <ScanFace className="size-5" />
+                    </span>
+                    <span className="min-w-0 flex-1">
+                        <span className="block font-display font-extrabold">
+                            {wallet.kyc_status === "pending" ? "Verification in review" : wallet.kyc_status === "rejected" ? "Verification needs another look" : "Verify your identity"}
+                        </span>
+                        <span className="block text-xs text-muted-foreground">
+                            {wallet.kyc_status === "pending"
+                                ? "We're checking your ID and selfie. This usually takes a few hours."
+                                : "Upload a valid government ID and a selfie holding it to unlock withdrawals."}
+                        </span>
+                    </span>
+                    {wallet.kyc_status !== "pending" ? <ChevronRight className="size-5 shrink-0 text-muted-foreground transition group-hover:translate-x-0.5" /> : null}
+                </Link>
+            ) : null}
+
             <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
-                <AppStatCard label="Balance" value={<AppAmount value={wallet?.balance} />} icon={<Wallet />} tone="gold" index={0} />
+                <AppStatCard label="Balance" value={<AppAmount value={wallet?.balance} countUp />} icon={<Wallet />} tone="gold" index={0} />
                 <AppStatCard label="Total deposits" value={<AppAmount value={wallet?.total_deposits} respectPrivacy={false} />} icon={<TrendingUp />} tone="jade" index={1} />
                 <AppStatCard label="Total withdrawals" value={<AppAmount value={wallet?.total_withdrawals} respectPrivacy={false} />} icon={<TrendingDown />} tone="ember" index={2} />
                 <AppStatCard

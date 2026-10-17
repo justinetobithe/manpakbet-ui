@@ -149,6 +149,7 @@
     --surface-to: rgba(255, 255, 255, 0.86);
     --surface-shadow: 0 1px 2px rgba(52, 30, 92, 0.05), 0 8px 24px -12px rgba(52, 30, 92, 0.12);
     --glass: rgba(255, 255, 255, 0.82);
+    --bar: #ffffff;
     --stage-a: rgba(255, 46, 116, 0.07);
     --stage-b: rgba(245, 165, 36, 0.09);
     --stage-c: rgba(124, 58, 237, 0.07);
@@ -209,6 +210,7 @@
     --surface-to: rgba(21, 12, 36, 0.72);
     --surface-shadow: none;
     --glass: rgba(18, 10, 31, 0.72);
+    --bar: #150c24;
     --stage-a: rgba(255, 46, 116, 0.16);
     --stage-b: rgba(255, 194, 61, 0.11);
     --stage-c: rgba(108, 63, 196, 0.22);
@@ -286,6 +288,10 @@
         background: var(--glass);
         backdrop-filter: blur(18px) saturate(140%);
         -webkit-backdrop-filter: blur(18px) saturate(140%);
+    }
+
+    .bar {
+        background-color: var(--bar);
     }
 
     .text-gold {

@@ -32,7 +32,7 @@ export default function HomeLanding() {
 
     return (
         <div className="space-y-10 sm:space-y-12">
-            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }} className="grid gap-3 lg:grid-cols-[2.2fr_1fr] lg:[&>*]:min-h-[400px]">
+            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }} className="grid grid-cols-1 gap-3 lg:grid-cols-[2.2fr_1fr] lg:[&>*]:min-h-[400px]">
                 <HeroCarousel banners={hero.data} loading={hero.isLoading} />
                 <SideBanners banners={side.data} loading={side.isLoading} />
             </motion.div>

@@ -49,7 +49,7 @@ export default function AppBottomTabs() {
     };
 
     return (
-        <nav className="glass pb-safe fixed inset-x-0 bottom-0 z-40 border-t border-border lg:hidden">
+        <nav className="bar pb-safe fixed inset-x-0 bottom-0 z-40 border-t border-border shadow-[0_-8px_24px_-12px_rgba(20,10,40,0.25)] lg:hidden">
             <div className="mx-auto flex h-16 max-w-xl items-stretch px-2">
                 {left.map(renderTab)}
                 <div className="relative flex w-20 shrink-0 justify-center">

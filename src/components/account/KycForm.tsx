@@ -5,13 +5,14 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { BadgeCheck, Camera, Check, ChevronLeft, ChevronRight, Clock3, FileImage, IdCard, MapPin, ShieldAlert, UserRound, X } from "lucide-react";
+import { BadgeCheck, Camera, Check, ChevronLeft, ChevronRight, Clock3, FileImage, IdCard, MapPin, ScanFace, ShieldAlert, UserRound, X } from "lucide-react";
 import { AppBadge, AppButton, AppCard, AppFieldShell, AppSelectField, AppTextField, AppToast } from "@/components/app";
 import apiError, { apiFieldErrors } from "@/lib/apiError";
 import { formatDate, formatDateTime } from "@/lib/format";
 import { useKyc, useSubmitKyc } from "@/lib/ProfileAPI";
 import { cn } from "@/lib/utils";
 import type { KycFileType } from "@/types/Kyc";
+import CameraCapture from "./CameraCapture";
 
 const adultCutoff = () => {
     const date = new Date();
@@ -68,6 +69,7 @@ export default function KycForm() {
     const [files, setFiles] = React.useState<Partial<Record<KycFileType, File>>>({});
     const [fileErrors, setFileErrors] = React.useState<Partial<Record<KycFileType, string>>>({});
     const [restart, setRestart] = React.useState(false);
+    const [cameraOpen, setCameraOpen] = React.useState(false);
 
     const form = useForm<Values>({
         resolver: zodResolver(schema),
@@ -267,6 +269,11 @@ export default function KycForm() {
                                                 )}
                                                 <input type="file" accept="image/*" capture={slot.key === "selfie" ? "user" : undefined} className="hidden" onChange={(event) => pickFile(slot.key, event.target.files?.[0])} />
                                             </label>
+                                            {slot.key === "selfie" ? (
+                                                <AppButton type="button" tone="surface" size="sm" block leftIcon={<ScanFace />} onClick={() => setCameraOpen(true)}>
+                                                    Take selfie with camera
+                                                </AppButton>
+                                            ) : null}
                                         </AppFieldShell>
                                     ))}
                                 </div>
@@ -291,6 +298,7 @@ export default function KycForm() {
                     )}
                 </div>
             </form>
+            <CameraCapture open={cameraOpen} onOpenChange={setCameraOpen} onCapture={(file) => pickFile("selfie", file)} />
         </AppCard>
     );
 }

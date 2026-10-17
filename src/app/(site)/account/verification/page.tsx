@@ -15,7 +15,7 @@ export default function VerificationPage() {
     return (
         <div className="space-y-5">
             <AppPageHeader icon={<BadgeCheck />} title="Identity verification" description="Verify once to unlock withdrawals and keep your account secure." />
-            <div className="grid gap-5 xl:grid-cols-[1.6fr_1fr]">
+            <div className="grid grid-cols-1 gap-5 xl:grid-cols-[1.6fr_1fr]">
                 <KycForm />
                 <AppCard title="Why we ask">
                     <ul className="space-y-4">

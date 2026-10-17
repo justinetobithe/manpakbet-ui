@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { Copy, CreditCard, Gamepad2, Globe, Lock, Save, Server, Settings } from "lucide-react";
 import { AppBadge, AppButton, AppCard, AppPageHeader, AppSwitchField, AppTextField, AppTextareaField, AppToast } from "@/components/app";
+import { AdminField } from "@/components/admin/AdminFields";
 import { useAdminSettings, useSaveSettings } from "@/lib/AdminAPI";
 import apiError, { apiFieldErrors } from "@/lib/apiError";
 import { cn } from "@/lib/utils";
@@ -76,7 +77,7 @@ export default function AdminSettingsPage() {
         <div className="space-y-5">
             <AppPageHeader icon={<Settings />} title="Settings" description="Configure the platform. Changes apply immediately for every player." />
 
-            <div className="grid gap-5 lg:grid-cols-[260px_1fr]">
+            <div className="grid grid-cols-1 gap-5 lg:grid-cols-[260px_1fr]">
                 <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-1 lg:self-start">
                     {tabs.map((item) => (
                         <button
@@ -161,6 +162,9 @@ function PaymentsTab({ form }: TabProps) {
                         <AppSwitchField control={form.control} name={`payments.${method}_enabled`} label="Enabled" hint="Show this channel in the wallet" className="sm:col-span-2" />
                         <AppTextField control={form.control} name={`payments.${method}_account_name`} label="Account name" />
                         <AppTextField control={form.control} name={`payments.${method}_account_number`} label="Account number" />
+                        <div className="sm:col-span-2">
+                            <AdminField control={form.control} field={{ name: `payments.${method}_qr`, label: "Payment QR code", type: "image", folder: "payments", hint: "Upload the QR from your GCash / Maya app. Players scan it on the deposit page." }} />
+                        </div>
                     </div>
                 </AppCard>
             ))}

@@ -47,7 +47,7 @@ export default function MobileNav() {
                             <div className="mt-3 flex items-end justify-between gap-3">
                                 <div>
                                     <div className="text-[10px] font-bold tracking-wider text-muted-foreground uppercase">Balance</div>
-                                    <AppAmount value={wallet?.balance} className="text-xl font-extrabold text-gold-200" />
+                                    <AppAmount value={wallet?.balance} countUp className="text-xl font-extrabold text-gold-200" />
                                 </div>
                                 <AppButton size="sm" leftIcon={<Wallet />} onClick={() => openWallet("deposit")}>
                                     Deposit

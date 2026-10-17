@@ -57,7 +57,7 @@ export default function SupportPage() {
                 ))}
             </div>
 
-            <div className="grid gap-6 lg:grid-cols-[1.5fr_1fr]">
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.5fr_1fr]">
                 <AppCard title="Frequently asked questions">
                     <Accordion type="single" collapsible className="-mt-2">
                         {faqs.map((item, index) => (

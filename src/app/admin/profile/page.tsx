@@ -102,7 +102,7 @@ export default function AdminProfilePage() {
                 </div>
             </div>
 
-            <div className="grid gap-5 lg:grid-cols-[240px_1fr]">
+            <div className="grid grid-cols-1 gap-5 lg:grid-cols-[240px_1fr]">
                 <div className="grid grid-cols-3 gap-2 lg:grid-cols-1 lg:self-start">
                     {tabs.map((item) => (
                         <button
