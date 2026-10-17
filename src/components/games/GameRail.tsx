@@ -39,11 +39,11 @@ export default function GameRail({ games, loading, className }: GameRailProps) {
 
     return (
         <div className={cn("group/rail relative", className)}>
-            <div ref={ref} onScroll={update} className="no-scrollbar -mx-3 flex snap-x snap-mandatory gap-2.5 overflow-x-auto scroll-smooth px-3 sm:-mx-0 sm:gap-3 sm:px-0">
+            <div ref={ref} onScroll={update} className="no-scrollbar -mx-3 flex snap-x snap-mandatory gap-2 overflow-x-auto scroll-smooth px-3 sm:-mx-0 sm:gap-2.5 sm:px-0">
                 {loading && !games?.length
-                    ? Array.from({ length: 8 }).map((_, index) => <GameCardSkeleton key={index} className="w-[31%] shrink-0 sm:w-[22%] md:w-[18%] lg:w-[15%] xl:w-[13.2%]" />)
+                    ? Array.from({ length: 8 }).map((_, index) => <GameCardSkeleton key={index} className="w-[30%] shrink-0 sm:w-[19%] md:w-[15.6%] lg:w-[13.5%] xl:w-[11.7%]" />)
                     : games?.map((game, index) => (
-                          <GameCard key={game.id} game={game} index={index} className="w-[31%] shrink-0 snap-start sm:w-[22%] md:w-[18%] lg:w-[15%] xl:w-[13.2%]" />
+                          <GameCard key={game.id} game={game} index={index} compact className="w-[30%] shrink-0 snap-start sm:w-[19%] md:w-[15.6%] lg:w-[13.5%] xl:w-[11.7%]" />
                       ))}
             </div>
             <RailButton side="left" hidden={edges.start} onClick={() => scroll(-1)} />

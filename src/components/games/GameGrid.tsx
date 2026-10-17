@@ -9,14 +9,14 @@ type GameGridProps = {
     className?: string;
 };
 
-export const gameGridClass = "grid grid-cols-3 gap-2.5 sm:grid-cols-4 sm:gap-3 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7";
+export const gameGridClass = "grid grid-cols-3 gap-2 sm:grid-cols-5 sm:gap-2.5 md:grid-cols-6 lg:grid-cols-7 xl:grid-cols-8";
 
 export default function GameGrid({ games, loading, skeletonCount = 14, className }: GameGridProps) {
     return (
         <div className={cn(gameGridClass, className)}>
             {loading && !games?.length
                 ? Array.from({ length: skeletonCount }).map((_, index) => <GameCardSkeleton key={index} />)
-                : games?.map((game, index) => <GameCard key={game.id} game={game} index={index} />)}
+                : games?.map((game, index) => <GameCard key={game.id} game={game} index={index} compact />)}
         </div>
     );
 }

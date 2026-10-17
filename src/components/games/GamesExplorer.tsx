@@ -42,7 +42,7 @@ export default function GamesExplorer({ category }: { category?: string }) {
         provider: provider || undefined,
         sort,
         slugs: slugList ? slugList.slice(0, 60).join(",") : undefined,
-        per_page: 28,
+        per_page: 32,
     };
 
     const enabled = !slugList || slugList.length > 0;
