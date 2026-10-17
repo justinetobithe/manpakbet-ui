@@ -111,7 +111,7 @@ export default function AdminProfilePage() {
                             onClick={() => setTab(item.id)}
                             className={cn(
                                 "relative flex items-center gap-3 rounded-2xl border p-3 text-left text-sm font-semibold transition",
-                                tab === item.id ? "border-gold-400/50 bg-gold-400/10 text-gold-200" : "border-border bg-white/3 text-foreground/75 hover:border-white/20"
+                                tab === item.id ? "border-gold-400/50 bg-gold-400/10 text-gold-200" : "border-border bg-fg/3 text-foreground/75 hover:border-fg/20"
                             )}
                         >
                             {tab === item.id ? <motion.span layoutId="profile-tab" className="bg-gold absolute top-3 bottom-3 left-0 w-1 rounded-full" /> : null}

@@ -19,7 +19,7 @@ export default function SiteFooter() {
             <div className="relative mx-auto max-w-350 px-4 sm:px-5">
                 <div className="grid grid-cols-2 gap-2.5 py-8 lg:grid-cols-4 lg:gap-4">
                     {assurances.map(({ icon: Icon, title, text }) => (
-                        <div key={title} className="flex items-center gap-3 rounded-2xl border border-border bg-white/2.5 p-3 sm:p-4">
+                        <div key={title} className="flex items-center gap-3 rounded-2xl border border-border bg-fg/2.5 p-3 sm:p-4">
                             <div className="grid size-10 shrink-0 place-items-center rounded-xl bg-gold-400/12 text-gold-300 ring-1 ring-gold-400/20">
                                 <Icon className="size-5" />
                             </div>
@@ -64,7 +64,7 @@ export default function SiteFooter() {
                         <div className="text-[11px] font-bold tracking-[0.2em] text-gold-300/90 uppercase">Payment methods</div>
                         <div className="grid grid-cols-2 gap-2.5">
                             {paymentMethods.map((method) => (
-                                <div key={method.id} className="flex items-center gap-2.5 rounded-2xl border border-border bg-white/3 p-2">
+                                <div key={method.id} className="flex items-center gap-2.5 rounded-2xl border border-border bg-fg/3 p-2">
                                     <Image src={method.logo} alt={method.label} width={40} height={40} className="size-10 shrink-0 rounded-xl bg-white object-contain p-1" />
                                     <span className="text-sm font-bold">{method.label}</span>
                                 </div>
@@ -84,13 +84,13 @@ export default function SiteFooter() {
                             restricted persons are not allowed to play. Prohibition to play in open and public places.
                         </p>
                     </div>
-                    <div className="shrink-0 rounded-xl border border-border bg-white/4 px-4 py-2.5">
+                    <div className="shrink-0 rounded-xl border border-border bg-fg/4 px-4 py-2.5">
                         <Image src="/pagcor-logo.svg" alt="PAGCOR" width={120} height={30} className="h-7 w-auto opacity-90" />
                     </div>
                 </div>
             </div>
 
-            <div className="relative border-t border-border bg-black/30">
+            <div className="relative border-t border-border bg-fg/5">
                 <div className="mx-auto flex max-w-350 flex-col items-center gap-2 px-4 pt-4 pb-24 text-xs text-muted-foreground sm:flex-row sm:justify-between sm:px-5 lg:pb-4">
                     <span>
                         © {new Date().getFullYear()} {siteConfig.name}. All rights reserved.

@@ -31,7 +31,7 @@ export default function AccountShell({ children }: { children: React.ReactNode }
                             </AppBadge>
                         </div>
                     </div>
-                    <div className="relative mt-4 rounded-2xl bg-black/30 p-3">
+                    <div className="relative mt-4 rounded-2xl bg-fg/5 p-3">
                         <div className="text-[10px] font-bold tracking-wider text-muted-foreground uppercase">Balance</div>
                         <AppAmount value={wallet?.balance} className="font-display text-2xl font-extrabold text-gold-200" />
                     </div>
@@ -46,7 +46,7 @@ export default function AccountShell({ children }: { children: React.ReactNode }
                                 href={item.href}
                                 className={cn(
                                     "relative inline-flex h-11 shrink-0 items-center gap-2.5 rounded-xl px-4 text-sm font-semibold transition",
-                                    active ? "text-gold-200" : "text-foreground/70 hover:bg-white/4 hover:text-foreground"
+                                    active ? "text-gold-200" : "text-foreground/70 hover:bg-fg/4 hover:text-foreground"
                                 )}
                             >
                                 {active ? <motion.span layoutId="account-nav" className="absolute inset-0 rounded-xl bg-gold-400/12 ring-1 ring-gold-400/30" /> : null}

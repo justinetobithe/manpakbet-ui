@@ -123,7 +123,7 @@ export default function AdminGamesPage() {
                     ]}
                 />
             </div>
-            <div className="flex rounded-xl border border-border bg-black/20 p-1 sm:ml-auto">
+            <div className="flex rounded-xl border border-border bg-fg/5 p-1 sm:ml-auto">
                 {(["grid", "table"] as const).map((mode) => (
                     <button
                         key={mode}
@@ -184,7 +184,7 @@ export default function AdminGamesPage() {
                         {list.isLoading ? (
                             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6">
                                 {Array.from({ length: 12 }).map((_, index) => (
-                                    <div key={index} className="aspect-[3/4] animate-pulse rounded-2xl bg-white/5" />
+                                    <div key={index} className="aspect-[3/4] animate-pulse rounded-2xl bg-fg/5" />
                                 ))}
                             </div>
                         ) : list.data?.data.length ? (

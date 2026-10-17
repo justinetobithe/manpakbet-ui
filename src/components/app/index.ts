@@ -15,3 +15,4 @@ export { default as AppStack } from "./AppStack";
 export { default as AppStatCard } from "./AppStatCard";
 export { default as AppTable, type AppTableSort } from "./AppTable";
 export { default as AppToast } from "./AppToast";
+export { default as AppThemeToggle } from "./AppThemeToggle";

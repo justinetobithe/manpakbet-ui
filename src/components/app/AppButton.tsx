@@ -13,9 +13,9 @@ const appButtonVariants = cva(
             tone: {
                 gold: "bg-gold text-[#2a1600] ring-gold hover:brightness-110",
                 ember: "bg-ember text-white shadow-[0_10px_30px_-10px_rgba(255,46,116,0.7)] hover:brightness-110",
-                surface: "border border-border bg-white/5 text-foreground hover:border-white/20 hover:bg-white/9",
+                surface: "border border-border bg-fg/5 text-foreground hover:border-fg/20 hover:bg-fg/9",
                 outline: "border border-gold-400/40 bg-transparent text-gold-300 hover:bg-gold-400/10",
-                ghost: "bg-transparent text-foreground/80 hover:bg-white/6 hover:text-foreground",
+                ghost: "bg-transparent text-foreground/80 hover:bg-fg/6 hover:text-foreground",
                 danger: "bg-destructive/90 text-white hover:bg-destructive",
                 success: "bg-success/90 text-[#00241a] hover:bg-success",
                 link: "h-auto bg-transparent p-0 text-gold-300 underline-offset-4 hover:underline",
@@ -73,7 +73,7 @@ export default function AppButton({
     return (
         <button className={classes} disabled={disabled || loading} aria-busy={loading || undefined} {...props}>
             {shine ? (
-                <span className="pointer-events-none absolute inset-y-0 left-0 w-1/3 animate-shine bg-linear-to-r from-transparent via-white/45 to-transparent" />
+                <span className="pointer-events-none absolute inset-y-0 left-0 w-1/3 animate-shine bg-linear-to-r from-transparent via-fg/45 to-transparent" />
             ) : null}
             {loading ? <Loader2 className="animate-spin" /> : leftIcon}
             {children}

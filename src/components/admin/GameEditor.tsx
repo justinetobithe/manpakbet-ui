@@ -122,8 +122,8 @@ export default function GameEditor({ id }: { id?: number }) {
     if (editing && detail.isLoading) {
         return (
             <div className="grid gap-5 lg:grid-cols-[1fr_360px]">
-                <div className="h-[600px] animate-pulse rounded-2xl bg-white/5" />
-                <div className="h-[600px] animate-pulse rounded-2xl bg-white/5" />
+                <div className="h-[600px] animate-pulse rounded-2xl bg-fg/5" />
+                <div className="h-[600px] animate-pulse rounded-2xl bg-fg/5" />
             </div>
         );
     }
@@ -309,7 +309,7 @@ export default function GameEditor({ id }: { id?: number }) {
 
 function Metric({ label, value }: { label: string; value: React.ReactNode }) {
     return (
-        <div className="rounded-xl border border-border bg-white/3 p-2.5 text-center">
+        <div className="rounded-xl border border-border bg-fg/3 p-2.5 text-center">
             <div className="text-[10px] font-bold tracking-wider text-muted-foreground uppercase">{label}</div>
             <div className="mt-0.5 truncate text-sm font-bold">{value}</div>
         </div>

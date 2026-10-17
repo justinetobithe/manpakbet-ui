@@ -14,7 +14,7 @@ export default function TrendingBoard({ games, loading }: { games?: Game[]; load
     return (
         <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-5">
             {loading && !list.length
-                ? Array.from({ length: 10 }).map((_, index) => <div key={index} className="h-20 animate-pulse rounded-2xl bg-white/5" />)
+                ? Array.from({ length: 10 }).map((_, index) => <div key={index} className="h-20 animate-pulse rounded-2xl bg-fg/5" />)
                 : list.map((game, index) => (
                       <motion.div
                           key={game.id}
@@ -23,7 +23,7 @@ export default function TrendingBoard({ games, loading }: { games?: Game[]; load
                           viewport={{ once: true }}
                           transition={{ delay: index * 0.04 }}
                       >
-                          <Link href={`/play/${game.slug}`} className="group flex items-center gap-3 rounded-2xl border border-border bg-white/2.5 p-2 pr-3 transition hover:border-gold-400/40 hover:bg-white/5">
+                          <Link href={`/play/${game.slug}`} className="group flex items-center gap-3 rounded-2xl border border-border bg-fg/2.5 p-2 pr-3 transition hover:border-gold-400/40 hover:bg-fg/5">
                               <span className={`w-7 shrink-0 text-center font-display text-2xl font-extrabold italic ${index < 3 ? "text-gold" : "text-foreground/25"}`}>{index + 1}</span>
                               <AppImage src={gameImage(game)} alt={game.name} wrapperClassName="size-14 shrink-0 rounded-xl" />
                               <div className="min-w-0 flex-1">

@@ -79,7 +79,7 @@ export default function AdminKycPage() {
                             setStatus(item.id);
                             setPage(1);
                         }}
-                        className={cn("relative h-10 shrink-0 rounded-xl border px-4 text-sm font-semibold transition", status === item.id ? "border-transparent text-[#2a1600]" : "border-border bg-white/3 text-foreground/70 hover:text-foreground")}
+                        className={cn("relative h-10 shrink-0 rounded-xl border px-4 text-sm font-semibold transition", status === item.id ? "border-transparent text-[#2a1600]" : "border-border bg-fg/3 text-foreground/70 hover:text-foreground")}
                     >
                         {status === item.id ? <motion.span layoutId="kyc-tab" className="bg-gold absolute inset-0 rounded-xl" /> : null}
                         <span className="relative">{item.label}</span>

@@ -12,7 +12,7 @@ export default function PromotionDetail({ slug }: { slug: string }) {
     const { data: promotion, isLoading, isError } = usePromotion(slug);
     const { data: others } = usePromotions();
 
-    if (isLoading) return <div className="h-[480px] animate-pulse rounded-3xl bg-white/5" />;
+    if (isLoading) return <div className="h-[480px] animate-pulse rounded-3xl bg-fg/5" />;
 
     if (isError || !promotion) {
         return (

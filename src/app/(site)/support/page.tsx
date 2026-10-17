@@ -72,14 +72,14 @@ export default function SupportPage() {
                 <div className="space-y-3">
                     <AppCard glow title="Contact us" description="Average response time under 10 minutes.">
                         <div className="space-y-2.5">
-                            <a href={`mailto:${siteConfig.supportEmail}`} className="flex items-center gap-3 rounded-xl border border-border bg-white/3 p-3 transition hover:border-gold-400/40">
+                            <a href={`mailto:${siteConfig.supportEmail}`} className="flex items-center gap-3 rounded-xl border border-border bg-fg/3 p-3 transition hover:border-gold-400/40">
                                 <Mail className="size-5 text-gold-300" />
                                 <div>
                                     <div className="text-sm font-bold">Email</div>
                                     <div className="text-xs text-muted-foreground">{siteConfig.supportEmail}</div>
                                 </div>
                             </a>
-                            <div className="flex items-center gap-3 rounded-xl border border-border bg-white/3 p-3">
+                            <div className="flex items-center gap-3 rounded-xl border border-border bg-fg/3 p-3">
                                 <MessageCircle className="size-5 text-gold-300" />
                                 <div>
                                     <div className="text-sm font-bold">Live chat</div>

@@ -1,13 +1,12 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Clock3, Crown, Flame, Gift, Newspaper, Sparkles, Trophy } from "lucide-react";
+import { Crown, Flame, Gift, Newspaper, Sparkles, Trophy } from "lucide-react";
 import { AppSection } from "@/components/app";
 import CategoryBar from "@/components/games/CategoryBar";
 import GameRail from "@/components/games/GameRail";
 import { useCategories, useGames, useProviders } from "@/lib/CasinoAPI";
 import { useBanners, usePosts, usePromotions } from "@/lib/ContentAPI";
-import { useGameStore } from "@/stores";
 import CategoryTiles from "./CategoryTiles";
 import FeatureBand from "./FeatureBand";
 import HotSpotlight from "./HotSpotlight";
@@ -29,15 +28,11 @@ export default function HomeLanding() {
     const trending = useGames({ sort: "popular", per_page: 10 });
     const featured = useGames({ featured: true, per_page: 18 });
     const newest = useGames({ sort: "newest", per_page: 18 });
-    const recentSlugs = useGameStore((state) => state.recent);
-    const recent = useGames({ slugs: recentSlugs.slice(0, 18).join(","), per_page: 18 }, recentSlugs.length > 0);
-
-    const recentOrdered = recent.data?.data.slice().sort((a, b) => recentSlugs.indexOf(a.slug) - recentSlugs.indexOf(b.slug));
     const totalGames = categories.data?.reduce((sum, category) => sum + (category.games_count ?? 0), 0) ?? 0;
 
     return (
         <div className="space-y-10 sm:space-y-12">
-            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }} className="grid gap-3 lg:grid-cols-[2.2fr_1fr]">
+            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }} className="grid gap-3 lg:grid-cols-[2.2fr_1fr] lg:[&>*]:min-h-[400px]">
                 <HeroCarousel banners={hero.data} loading={hero.isLoading} />
                 <SideBanners banners={side.data} loading={side.isLoading} />
             </motion.div>
@@ -50,12 +45,6 @@ export default function HomeLanding() {
             <HotSpotlight />
 
             <LobbyStats games={totalGames} providers={providers.data?.length ?? 0} categories={categories.data?.length ?? 0} promotions={promotions.data?.length ?? 0} />
-
-            {recentOrdered?.length ? (
-                <AppSection title="Continue playing" icon={<Clock3 />} href="/games?view=recent">
-                    <GameRail games={recentOrdered} />
-                </AppSection>
-            ) : null}
 
             <AppSection title="Trending now" subtitle="Most played this week" icon={<Flame />} href="/games?sort=popular">
                 <TrendingBoard games={trending.data?.data} loading={trending.isLoading} />

@@ -48,7 +48,7 @@ export default function AppSearchInput({ value, onChange, placeholder = "Searchâ
                 autoFocus={autoFocus}
                 onChange={(event) => setDraft(event.target.value)}
                 placeholder={placeholder}
-                className="h-10 w-full rounded-xl border border-input bg-white/4 pr-9 pl-10 text-sm text-foreground outline-none transition placeholder:text-muted-foreground focus:border-gold-400/40 focus:bg-white/6 focus:ring-2 focus:ring-gold-400/15"
+                className="h-10 w-full rounded-xl border border-input bg-fg/4 pr-9 pl-10 text-sm text-foreground outline-none transition placeholder:text-muted-foreground focus:border-gold-400/40 focus:bg-fg/6 focus:ring-2 focus:ring-gold-400/15"
             />
             {draft ? (
                 <button
@@ -57,7 +57,7 @@ export default function AppSearchInput({ value, onChange, placeholder = "Searchâ
                         setDraft("");
                         onChange("");
                     }}
-                    className="absolute top-1/2 right-2 grid size-6 -translate-y-1/2 place-items-center rounded-md text-muted-foreground hover:bg-white/10 hover:text-foreground"
+                    className="absolute top-1/2 right-2 grid size-6 -translate-y-1/2 place-items-center rounded-md text-muted-foreground hover:bg-fg/10 hover:text-foreground"
                     aria-label="Clear search"
                 >
                     <X className="size-3.5" />

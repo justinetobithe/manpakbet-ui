@@ -14,7 +14,7 @@ type AppEmptyProps = {
 export default function AppEmpty({ icon, title = "Nothing here yet", description, action, className, compact }: AppEmptyProps) {
     return (
         <div className={cn("flex flex-col items-center justify-center text-center", compact ? "gap-2 py-8" : "gap-3 py-14", className)}>
-            <div className="relative grid size-14 place-items-center rounded-2xl bg-white/5 text-gold-300 ring-1 ring-white/10">
+            <div className="relative grid size-14 place-items-center rounded-2xl bg-fg/5 text-gold-300 ring-1 ring-fg/10">
                 <div className="absolute inset-0 rounded-2xl bg-gold-400/10 blur-xl" />
                 <span className="relative [&_svg]:size-6">{icon ?? <Inbox />}</span>
             </div>

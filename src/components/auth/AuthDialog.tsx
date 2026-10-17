@@ -46,21 +46,21 @@ export default function AuthDialog() {
 
 export function AuthShowcase() {
     return (
-        <div className="relative hidden overflow-hidden md:block">
+        <div className="relative hidden overflow-hidden bg-[#120a1f] text-white md:block">
             <img src="/banners/auth-panel.svg" alt="" className="absolute inset-0 h-full w-full object-cover" />
-            <div className="absolute inset-0 bg-linear-to-t from-plum-950 via-plum-950/40 to-transparent" />
+            <div className="absolute inset-0 bg-linear-to-t from-[#0b0613] via-[#0b0613]/50 to-transparent" />
             <div className="relative flex h-full flex-col justify-between p-7">
-                <AppLogo href={null} />
+                <AppLogo href={null} inverted />
                 <div className="space-y-4">
                     <h3 className="font-display text-3xl leading-tight font-extrabold">
                         Play bold.
                         <br />
-                        <span className="text-gold">Win brighter.</span>
+                        <span className="bg-linear-to-b from-[#fff1c2] via-[#ffd36b] to-[#f5a524] bg-clip-text text-transparent">Win brighter.</span>
                     </h3>
                     <ul className="space-y-2.5">
                         {perks.map(({ icon: Icon, text }) => (
-                            <li key={text} className="flex items-center gap-3 text-sm text-foreground/85">
-                                <span className="grid size-8 place-items-center rounded-lg bg-gold-400/15 text-gold-300 ring-1 ring-gold-400/25">
+                            <li key={text} className="flex items-center gap-3 text-sm text-white/85">
+                                <span className="grid size-8 place-items-center rounded-lg bg-gold-400/20 text-[#ffd36b] ring-1 ring-gold-400/30">
                                     <Icon className="size-4" />
                                 </span>
                                 {text}

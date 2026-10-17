@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LogOut, ShieldCheck, Wallet } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { AppAmount, AppButton, AppLogo } from "@/components/app";
+import { AppAmount, AppButton, AppLogo, AppThemeToggle } from "@/components/app";
 import { categoryIcons, primaryNav, secondaryNav } from "@/config/site";
 import { useAuth } from "@/hooks/useAuth";
 import { useLogout } from "@/lib/AuthenticationAPI";
@@ -82,7 +82,7 @@ export default function MobileNav() {
                                             href={`/games/${category.slug}`}
                                             onClick={close}
                                             className={cn(
-                                                "flex items-center gap-2 rounded-xl border border-border bg-white/3 px-2.5 py-2 text-xs font-semibold transition hover:border-gold-400/40",
+                                                "flex items-center gap-2 rounded-xl border border-border bg-fg/3 px-2.5 py-2 text-xs font-semibold transition hover:border-gold-400/40",
                                                 isActivePath(pathname, `/games/${category.slug}`) && "border-gold-400/40 text-gold-200"
                                             )}
                                         >
@@ -94,6 +94,10 @@ export default function MobileNav() {
                             </div>
                         </NavGroup>
                     ) : null}
+
+                    <div className="mt-6">
+                        <AppThemeToggle withLabel />
+                    </div>
 
                     <NavGroup title="More">
                         {secondaryNav.map((item) => (
@@ -131,7 +135,7 @@ function NavLink({ href, label, icon, active, onClick }: { href: string; label: 
             onClick={onClick}
             className={cn(
                 "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition [&_svg]:size-[18px]",
-                active ? "bg-gold-400/12 text-gold-200 ring-1 ring-gold-400/25" : "text-foreground/80 hover:bg-white/5"
+                active ? "bg-gold-400/12 text-gold-200 ring-1 ring-gold-400/25" : "text-foreground/80 hover:bg-fg/5"
             )}
         >
             {icon}

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { Menu, Search } from "lucide-react";
-import { AppButton, AppLogo } from "@/components/app";
+import { AppButton, AppLogo, AppThemeToggle } from "@/components/app";
 import { primaryNav, secondaryNav } from "@/config/site";
 import { useAuth } from "@/hooks/useAuth";
 import { isActivePath } from "@/lib/navigation";
@@ -26,7 +26,7 @@ export default function SiteHeader() {
                 <button
                     type="button"
                     onClick={() => setMobileNav(true)}
-                    className="-ml-1 grid size-10 shrink-0 place-items-center rounded-xl text-foreground/85 transition hover:bg-white/7 lg:hidden"
+                    className="-ml-1 grid size-10 shrink-0 place-items-center rounded-xl text-foreground/85 transition hover:bg-fg/7 lg:hidden"
                     aria-label="Open menu"
                 >
                     <Menu className="size-5" />
@@ -39,25 +39,27 @@ export default function SiteHeader() {
                 <button
                     type="button"
                     onClick={() => setSearch(true)}
-                    className="mx-auto hidden h-11 w-full max-w-md items-center gap-3 rounded-2xl border border-border bg-white/4 px-4 text-sm text-muted-foreground transition hover:border-gold-400/35 hover:bg-white/6 md:flex"
+                    className="mx-auto hidden h-11 w-full max-w-md items-center gap-3 rounded-2xl border border-border bg-fg/4 px-4 text-sm text-muted-foreground transition hover:border-gold-400/35 hover:bg-fg/6 md:flex"
                 >
                     <Search className="size-4 shrink-0 text-gold-300" />
                     <span className="flex-1 truncate text-left">Search slots, live tables, studios…</span>
-                    <kbd className="rounded-md border border-border bg-black/30 px-1.5 py-0.5 text-[10px] font-semibold">/</kbd>
+                    <kbd className="rounded-md border border-border bg-fg/5 px-1.5 py-0.5 text-[10px] font-semibold">/</kbd>
                 </button>
 
                 <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2 md:ml-0">
                     <button
                         type="button"
                         onClick={() => setSearch(true)}
-                        className="grid size-10 place-items-center rounded-xl text-foreground/85 transition hover:bg-white/7 md:hidden"
+                        className="grid size-10 place-items-center rounded-xl text-foreground/85 transition hover:bg-fg/7 md:hidden"
                         aria-label="Search games"
                     >
                         <Search className="size-5" />
                     </button>
 
+                    <AppThemeToggle className="hidden sm:inline-flex" />
+
                     {isLoading ? (
-                        <div className="h-10 w-40 animate-pulse rounded-2xl bg-white/6" />
+                        <div className="h-10 w-40 animate-pulse rounded-2xl bg-fg/6" />
                     ) : isAuthenticated ? (
                         <>
                             <WalletChip />
@@ -78,7 +80,7 @@ export default function SiteHeader() {
                 </div>
             </div>
 
-            <nav className="hidden border-t border-border/60 bg-black/15 lg:block">
+            <nav className="hidden border-t border-border/60 bg-fg/5 lg:block">
                 <div className="mx-auto flex h-12 max-w-350 items-center justify-between gap-4 px-5">
                     <div className="flex items-center gap-1">
                         {primaryNav.map((item) => {
@@ -116,7 +118,7 @@ export default function SiteHeader() {
                                     href={item.href}
                                     className={cn(
                                         "inline-flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-xs font-semibold whitespace-nowrap transition",
-                                        active ? "bg-white/8 text-foreground" : "text-muted-foreground hover:bg-white/5 hover:text-foreground"
+                                        active ? "bg-fg/8 text-foreground" : "text-muted-foreground hover:bg-fg/5 hover:text-foreground"
                                     )}
                                 >
                                     <Icon className="size-3.5" />

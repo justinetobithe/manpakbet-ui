@@ -48,7 +48,7 @@ export default function DisclaimerDialog() {
                     </div>
                     <ul className="space-y-2">
                         {restricted.map((item) => (
-                            <li key={item} className="flex gap-2.5 rounded-xl border border-border bg-white/2.5 px-3 py-2.5 text-sm text-foreground/80">
+                            <li key={item} className="flex gap-2.5 rounded-xl border border-border bg-fg/2.5 px-3 py-2.5 text-sm text-foreground/80">
                                 <Ban className="mt-0.5 size-4 shrink-0 text-ember-400" />
                                 {item}
                             </li>
@@ -67,7 +67,7 @@ export default function DisclaimerDialog() {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3 border-t border-border bg-black/25 p-4">
+                <div className="grid grid-cols-2 gap-3 border-t border-border bg-fg/5 p-4">
                     <AppButton tone="surface" size="lg" onClick={() => window.location.assign("https://www.google.com")}>
                         I&apos;m under 21
                     </AppButton>

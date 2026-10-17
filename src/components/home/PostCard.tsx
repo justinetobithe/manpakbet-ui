@@ -16,7 +16,7 @@ export default function PostCard({ post, index = 0, horizontal = false }: { post
                 href={`/news/${post.slug}`}
                 className={
                     horizontal
-                        ? "group flex gap-4 rounded-2xl border border-border bg-white/2.5 p-3 transition hover:border-gold-400/40"
+                        ? "group flex gap-4 rounded-2xl border border-border bg-fg/2.5 p-3 transition hover:border-gold-400/40"
                         : "group flex h-full flex-col overflow-hidden rounded-3xl border border-border bg-plum-850 transition hover:-translate-y-1 hover:border-gold-400/40"
                 }
             >

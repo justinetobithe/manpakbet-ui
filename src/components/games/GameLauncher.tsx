@@ -95,7 +95,7 @@ export default function GameLauncher({ slug }: { slug: string }) {
     return (
         <div className="flex h-dvh flex-col bg-plum-950">
             <header className="glass relative z-20 flex h-14 shrink-0 items-center gap-2 border-b border-border px-2 sm:h-16 sm:gap-3 sm:px-4">
-                <Link href={`/play/${slug}`} className="grid size-10 shrink-0 place-items-center rounded-xl text-foreground/80 transition hover:bg-white/7" aria-label="Back to game">
+                <Link href={`/play/${slug}`} className="grid size-10 shrink-0 place-items-center rounded-xl text-foreground/80 transition hover:bg-fg/7" aria-label="Back to game">
                     <ArrowLeft className="size-5" />
                 </Link>
                 <div className="flex min-w-0 items-center gap-2.5">
@@ -113,7 +113,7 @@ export default function GameLauncher({ slug }: { slug: string }) {
 
                 <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2">
                     {mode === "real" ? (
-                        <div className="hidden items-center gap-2 rounded-xl border border-border bg-black/30 px-3 py-1.5 sm:flex">
+                        <div className="hidden items-center gap-2 rounded-xl border border-border bg-fg/5 px-3 py-1.5 sm:flex">
                             <Wallet className="size-4 text-gold-300" />
                             <AppAmount value={wallet?.balance} className="text-sm font-bold text-gold-200" />
                         </div>

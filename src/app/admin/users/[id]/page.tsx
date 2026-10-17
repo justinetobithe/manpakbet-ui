@@ -39,7 +39,7 @@ export default function AccountDetailPage() {
     const [toggling, setToggling] = React.useState(false);
     const [deleting, setDeleting] = React.useState(false);
 
-    if (isLoading) return <div className="h-96 animate-pulse rounded-2xl bg-white/5" />;
+    if (isLoading) return <div className="h-96 animate-pulse rounded-2xl bg-fg/5" />;
 
     if (isError || !data) {
         return (
@@ -152,7 +152,7 @@ export default function AccountDetailPage() {
                         key={item.id}
                         type="button"
                         onClick={() => setTab(item.id)}
-                        className={cn("relative inline-flex h-10 shrink-0 items-center gap-2 rounded-xl border px-4 text-sm font-semibold transition", tab === item.id ? "border-transparent text-[#2a1600]" : "border-border bg-white/3 text-foreground/70 hover:text-foreground")}
+                        className={cn("relative inline-flex h-10 shrink-0 items-center gap-2 rounded-xl border px-4 text-sm font-semibold transition", tab === item.id ? "border-transparent text-[#2a1600]" : "border-border bg-fg/3 text-foreground/70 hover:text-foreground")}
                     >
                         {tab === item.id ? <motion.span layoutId="account-detail-tab" className="bg-gold absolute inset-0 rounded-xl" /> : null}
                         <item.icon className="relative size-4" />

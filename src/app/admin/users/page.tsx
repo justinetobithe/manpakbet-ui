@@ -97,7 +97,7 @@ export default function AdminAccountsPage() {
                 placeholder="Search name, email or phone…"
                 className="w-full sm:max-w-sm sm:flex-1"
             />
-            <div className="flex rounded-xl border border-border bg-black/20 p-1 sm:ml-auto">
+            <div className="flex rounded-xl border border-border bg-fg/5 p-1 sm:ml-auto">
                 {(["cards", "table"] as const).map((mode) => (
                     <button
                         key={mode}
@@ -142,7 +142,7 @@ export default function AdminAccountsPage() {
                         }}
                         className={cn(
                             "relative h-10 shrink-0 rounded-xl border px-4 text-sm font-semibold transition",
-                            tab === item.id ? "border-transparent text-[#2a1600]" : "border-border bg-white/3 text-foreground/70 hover:text-foreground"
+                            tab === item.id ? "border-transparent text-[#2a1600]" : "border-border bg-fg/3 text-foreground/70 hover:text-foreground"
                         )}
                     >
                         {tab === item.id ? <motion.span layoutId="accounts-tab" className="bg-gold absolute inset-0 rounded-xl" transition={{ type: "spring", stiffness: 420, damping: 34 }} /> : null}
@@ -176,7 +176,7 @@ export default function AdminAccountsPage() {
                         {list.isLoading ? (
                             <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                                 {Array.from({ length: 6 }).map((_, index) => (
-                                    <div key={index} className="h-44 animate-pulse rounded-2xl bg-white/5" />
+                                    <div key={index} className="h-44 animate-pulse rounded-2xl bg-fg/5" />
                                 ))}
                             </div>
                         ) : list.data?.data.length ? (

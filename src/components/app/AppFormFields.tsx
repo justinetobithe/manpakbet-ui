@@ -8,7 +8,7 @@ import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 
 export const inputClass =
-    "h-11 w-full rounded-xl border border-input bg-white/4 px-3.5 text-sm text-foreground outline-none transition placeholder:text-muted-foreground/70 focus:border-gold-400/45 focus:bg-white/6 focus:ring-2 focus:ring-gold-400/15 disabled:opacity-50 aria-[invalid=true]:border-destructive/70";
+    "h-11 w-full rounded-xl border border-input bg-fg/4 px-3.5 text-sm text-foreground outline-none transition placeholder:text-muted-foreground/70 focus:border-gold-400/45 focus:bg-fg/6 focus:ring-2 focus:ring-gold-400/15 disabled:opacity-50 aria-[invalid=true]:border-destructive/70";
 
 type FieldShellProps = {
     label?: React.ReactNode;
@@ -81,7 +81,7 @@ export function AppTextField<T extends FieldValues>({ control, name, label, hint
                                 type="button"
                                 tabIndex={-1}
                                 onClick={() => setReveal((value) => !value)}
-                                className="absolute right-2 grid size-8 place-items-center rounded-lg text-muted-foreground hover:bg-white/10 hover:text-foreground"
+                                className="absolute right-2 grid size-8 place-items-center rounded-lg text-muted-foreground hover:bg-fg/10 hover:text-foreground"
                                 aria-label={reveal ? "Hide password" : "Show password"}
                             >
                                 {reveal ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
@@ -165,7 +165,7 @@ export function AppSwitchField<T extends FieldValues>({ control, name, label, hi
             control={control}
             name={name}
             render={({ field }) => (
-                <label className={cn("flex cursor-pointer items-center justify-between gap-4 rounded-xl border border-input bg-white/3 px-3.5 py-3", className)}>
+                <label className={cn("flex cursor-pointer items-center justify-between gap-4 rounded-xl border border-input bg-fg/3 px-3.5 py-3", className)}>
                     <span>
                         <span className="block text-sm font-semibold">{label}</span>
                         {hint ? <span className="block text-xs text-muted-foreground">{hint}</span> : null}

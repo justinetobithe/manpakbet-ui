@@ -15,7 +15,10 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-    themeColor: "#0b0613",
+    themeColor: [
+        { media: "(prefers-color-scheme: light)", color: "#f4f1fa" },
+        { media: "(prefers-color-scheme: dark)", color: "#0b0613" },
+    ],
     width: "device-width",
     initialScale: 1,
     viewportFit: "cover",
@@ -23,7 +26,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
-        <html lang="en" className="dark" suppressHydrationWarning>
+        <html lang="en" suppressHydrationWarning>
             <body className={`${display.variable} ${body.variable} bg-stage`}>
                 <AppProviders>{children}</AppProviders>
             </body>

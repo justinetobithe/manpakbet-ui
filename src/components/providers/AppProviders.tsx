@@ -3,6 +3,7 @@
 import * as React from "react";
 import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SessionProvider, signOut, useSession } from "next-auth/react";
+import { ThemeProvider, useTheme } from "next-themes";
 import { Toaster } from "sonner";
 import { resetApiSession } from "@/lib/api";
 import { isTokenExpired, tokenExpiresIn } from "@/lib/tokenExpiry";
@@ -75,6 +76,25 @@ function AuthSync() {
     return null;
 }
 
+function ThemedToaster() {
+    const { resolvedTheme } = useTheme();
+
+    return (
+        <Toaster
+            theme={resolvedTheme === "dark" ? "dark" : "light"}
+            position="top-center"
+            richColors
+            closeButton
+            toastOptions={{
+                classNames: {
+                    toast: "!rounded-2xl !border !border-border !bg-popover/95 !text-foreground !backdrop-blur-xl !shadow-2xl !shadow-black/20 !font-sans",
+                    description: "!text-muted-foreground",
+                },
+            }}
+        />
+    );
+}
+
 function StoreHydrator() {
     React.useEffect(() => {
         void rehydrateStores();
@@ -87,24 +107,15 @@ export default function AppProviders({ children }: { children: React.ReactNode }
     const [queryClient] = React.useState(makeQueryClient);
 
     return (
-        <SessionProvider refetchOnWindowFocus={false}>
-            <QueryClientProvider client={queryClient}>
-                <StoreHydrator />
-                <AuthSync />
-                {children}
-                <Toaster
-                    theme="dark"
-                    position="top-center"
-                    richColors
-                    closeButton
-                    toastOptions={{
-                        classNames: {
-                            toast: "!rounded-2xl !border !border-white/10 !bg-[#1a1029]/95 !backdrop-blur-xl !shadow-2xl !shadow-black/50 !font-sans",
-                            description: "!text-white/65",
-                        },
-                    }}
-                />
-            </QueryClientProvider>
-        </SessionProvider>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} storageKey="mpb-theme" disableTransitionOnChange>
+            <SessionProvider refetchOnWindowFocus={false}>
+                <QueryClientProvider client={queryClient}>
+                    <StoreHydrator />
+                    <AuthSync />
+                    {children}
+                    <ThemedToaster />
+                </QueryClientProvider>
+            </SessionProvider>
+        </ThemeProvider>
     );
 }

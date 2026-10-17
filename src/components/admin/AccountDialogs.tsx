@@ -57,7 +57,7 @@ export function BalanceDialog({ user, onClose, onDone }: { user: Pick<User, "id"
             }
         >
             <form onSubmit={submit} className="space-y-4" noValidate>
-                <div className="rounded-xl border border-border bg-white/3 p-3 text-center">
+                <div className="rounded-xl border border-border bg-fg/3 p-3 text-center">
                     <AppAmount value={user?.balance} respectPrivacy={false} className="font-display text-2xl font-extrabold text-gold-200" />
                 </div>
                 <AppTextField control={form.control} name="amount" label="Amount" prefix="₱" inputMode="decimal" hint="Use a negative value to deduct" />

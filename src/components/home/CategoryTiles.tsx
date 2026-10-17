@@ -22,7 +22,7 @@ export default function CategoryTiles({ categories, loading }: { categories?: Ga
         return (
             <div className="grid grid-cols-4 gap-2.5 sm:grid-cols-7">
                 {Array.from({ length: 7 }).map((_, index) => (
-                    <div key={index} className="aspect-square animate-pulse rounded-2xl bg-white/5 sm:aspect-[4/3]" />
+                    <div key={index} className="aspect-square animate-pulse rounded-2xl bg-fg/5 sm:aspect-[4/3]" />
                 ))}
             </div>
         );

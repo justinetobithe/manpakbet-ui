@@ -68,7 +68,7 @@ export default function TrendChart({ data }: { data: Point[] }) {
                 <svg width={width} height={HEIGHT} role="img" aria-label="Approved deposits and withdrawals over the last 7 days" className="block overflow-visible">
                     {ticks.map((tick) => (
                         <g key={tick}>
-                            <line x1={PAD.left} x2={width - PAD.right} y1={y(tick)} y2={y(tick)} stroke="currentColor" className="text-white/7" strokeDasharray={tick === 0 ? undefined : "3 4"} />
+                            <line x1={PAD.left} x2={width - PAD.right} y1={y(tick)} y2={y(tick)} stroke="currentColor" className="text-fg/10" strokeDasharray={tick === 0 ? undefined : "3 4"} />
                             <text x={PAD.left - 8} y={y(tick)} dy="0.32em" textAnchor="end" className="fill-muted-foreground text-[10px]">
                                 {formatMoneyCompact(tick)}
                             </text>

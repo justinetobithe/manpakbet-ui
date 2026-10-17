@@ -85,11 +85,11 @@ export default function AdminSettingsPage() {
                             onClick={() => setTab(item.id)}
                             className={cn(
                                 "relative flex items-center gap-3 overflow-hidden rounded-2xl border p-3 text-left transition",
-                                tab === item.id ? "border-gold-400/50 bg-gold-400/10" : "border-border bg-white/3 hover:border-white/20"
+                                tab === item.id ? "border-gold-400/50 bg-gold-400/10" : "border-border bg-fg/3 hover:border-fg/20"
                             )}
                         >
                             {tab === item.id ? <motion.span layoutId="settings-tab" className="bg-gold absolute top-3 bottom-3 left-0 w-1 rounded-full" /> : null}
-                            <span className={cn("grid size-10 shrink-0 place-items-center rounded-xl", tab === item.id ? "bg-gold text-[#2a1600]" : "bg-white/6 text-gold-300")}>
+                            <span className={cn("grid size-10 shrink-0 place-items-center rounded-xl", tab === item.id ? "bg-gold text-[#2a1600]" : "bg-fg/6 text-gold-300")}>
                                 <item.icon className="size-5" />
                             </span>
                             <span className="min-w-0">
@@ -101,7 +101,7 @@ export default function AdminSettingsPage() {
                 </div>
 
                 {isLoading || !data ? (
-                    <div className="h-96 animate-pulse rounded-2xl bg-white/5" />
+                    <div className="h-96 animate-pulse rounded-2xl bg-fg/5" />
                 ) : (
                     <motion.form key={tab} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} onSubmit={submit} className="space-y-5" noValidate>
                         {tab === "general" ? <GeneralTab form={form} /> : tab === "payments" ? <PaymentsTab form={form} /> : tab === "games" ? <GamesTab form={form} system={data.system} /> : <SecurityTab system={data.system} />}
@@ -198,7 +198,7 @@ function GamesTab({ form, system }: TabProps & { system: SystemInfo }) {
                     <Info label="Currency" value={provider.currency} />
                     <Info label="Session lifetime" value={`${provider.session_ttl_minutes} minutes`} />
                 </div>
-                <div className="mt-3 rounded-xl border border-border bg-black/30 p-3">
+                <div className="mt-3 rounded-xl border border-border bg-fg/5 p-3">
                     <div className="text-[10px] font-bold tracking-wider text-muted-foreground uppercase">Wallet callback URL</div>
                     <div className="mt-1 flex items-center justify-between gap-2">
                         <code className="truncate text-xs text-gold-200">{provider.callback_url}</code>
@@ -250,7 +250,7 @@ function SecurityTab({ system }: { system: SystemInfo }) {
 
 function Info({ label, value, warn }: { label: string; value: React.ReactNode; warn?: boolean }) {
     return (
-        <div className={cn("rounded-xl border p-3", warn ? "border-warning/40 bg-warning/8" : "border-border bg-white/3")}>
+        <div className={cn("rounded-xl border p-3", warn ? "border-warning/40 bg-warning/8" : "border-border bg-fg/3")}>
             <div className="text-[10px] font-bold tracking-wider text-muted-foreground uppercase">{label}</div>
             <div className={cn("mt-0.5 truncate text-sm font-bold", warn && "text-amber-300")}>{value}</div>
         </div>

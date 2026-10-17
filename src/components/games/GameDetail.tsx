@@ -42,8 +42,8 @@ export default function GameDetail({ slug }: { slug: string }) {
     if (isLoading) {
         return (
             <div className="space-y-6">
-                <div className="h-[340px] animate-pulse rounded-3xl bg-white/5" />
-                <div className="h-48 animate-pulse rounded-3xl bg-white/5" />
+                <div className="h-[340px] animate-pulse rounded-3xl bg-fg/5" />
+                <div className="h-48 animate-pulse rounded-3xl bg-fg/5" />
             </div>
         );
     }

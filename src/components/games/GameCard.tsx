@@ -88,5 +88,5 @@ export default function GameCard({ game, className, index = 0, compact = false }
 }
 
 export function GameCardSkeleton({ className }: { className?: string }) {
-    return <div className={cn("aspect-[2/3] animate-pulse rounded-2xl bg-white/5", className)} />;
+    return <div className={cn("aspect-[2/3] animate-pulse rounded-2xl bg-fg/5", className)} />;
 }

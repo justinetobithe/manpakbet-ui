@@ -10,7 +10,7 @@ export default function TermsPage() {
                     bound by these terms.
                 </p>
 
-                <div className="mt-5 flex items-center gap-3 rounded-2xl border border-border bg-white/3 p-4">
+                <div className="mt-5 flex items-center gap-3 rounded-2xl border border-border bg-fg/3 p-4">
                     <Image src="/pagcor.png" alt="PAGCOR" width={40} height={40} />
                     <div className="text-sm text-foreground/80">
                         Responsible gaming notice: Play responsibly and within your limits. Support is available for users who need help.

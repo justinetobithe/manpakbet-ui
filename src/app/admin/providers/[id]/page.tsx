@@ -65,7 +65,7 @@ export default function ProviderDetailPage() {
         }
     };
 
-    if (isLoading) return <div className="h-96 animate-pulse rounded-2xl bg-white/5" />;
+    if (isLoading) return <div className="h-96 animate-pulse rounded-2xl bg-fg/5" />;
 
     if (isError || !data) {
         return (

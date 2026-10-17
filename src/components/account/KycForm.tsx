@@ -135,7 +135,7 @@ export default function KycForm() {
         }
     });
 
-    if (isLoading) return <div className="h-96 animate-pulse rounded-2xl bg-white/5" />;
+    if (isLoading) return <div className="h-96 animate-pulse rounded-2xl bg-fg/5" />;
 
     const status = data?.status ?? "unverified";
     const submission = data?.submission;
@@ -198,7 +198,7 @@ export default function KycForm() {
                             index === step ? "border-gold-400/60 bg-gold-400/10" : index < step ? "border-success/40 bg-success/5" : "border-border opacity-60"
                         )}
                     >
-                        <span className={cn("grid size-8 shrink-0 place-items-center rounded-lg", index < step ? "bg-success/20 text-jade-400" : index === step ? "bg-gold text-[#2a1600]" : "bg-white/6")}>
+                        <span className={cn("grid size-8 shrink-0 place-items-center rounded-lg", index < step ? "bg-success/20 text-jade-400" : index === step ? "bg-gold text-[#2a1600]" : "bg-fg/6")}>
                             {index < step ? <Check className="size-4" /> : <item.icon className="size-4" />}
                         </span>
                         <span className="hidden min-w-0 sm:block">
@@ -240,7 +240,7 @@ export default function KycForm() {
                                         <AppFieldShell key={slot.key} label={`${slot.label}${slot.required ? "" : " (optional)"}`} hint={slot.hint} error={fileErrors[slot.key]}>
                                             <label
                                                 className={cn(
-                                                    "group relative flex aspect-[4/3] cursor-pointer flex-col items-center justify-center gap-2 overflow-hidden rounded-2xl border-2 border-dashed bg-white/3 text-center transition hover:border-gold-400/50",
+                                                    "group relative flex aspect-[4/3] cursor-pointer flex-col items-center justify-center gap-2 overflow-hidden rounded-2xl border-2 border-dashed bg-fg/3 text-center transition hover:border-gold-400/50",
                                                     fileErrors[slot.key] ? "border-destructive/60" : "border-border"
                                                 )}
                                             >
@@ -297,7 +297,7 @@ export default function KycForm() {
 
 function Info({ label, value }: { label: string; value: React.ReactNode }) {
     return (
-        <div className="rounded-xl border border-border bg-white/3 p-2.5">
+        <div className="rounded-xl border border-border bg-fg/3 p-2.5">
             <div className="text-[10px] font-bold tracking-wider text-muted-foreground uppercase">{label}</div>
             <div className="truncate font-semibold">{value}</div>
         </div>

@@ -148,7 +148,7 @@ export default function AppTable<T>({
                             : visibleRows.map((row) => (
                                   <div
                                       key={row.id}
-                                      className={cn("p-4", onRowClick && "cursor-pointer active:bg-white/3")}
+                                      className={cn("p-4", onRowClick && "cursor-pointer active:bg-fg/3")}
                                       onClick={onRowClick ? () => onRowClick(row.original) : undefined}
                                   >
                                       {renderMobileCard(row.original)}
@@ -280,7 +280,7 @@ function PagerButton({ children, onClick, disabled, label }: { children: React.R
             onClick={onClick}
             disabled={disabled}
             aria-label={label}
-            className="grid size-8 place-items-center rounded-lg border border-border bg-white/3 text-foreground transition hover:bg-white/8 disabled:pointer-events-none disabled:opacity-35"
+            className="grid size-8 place-items-center rounded-lg border border-border bg-fg/3 text-foreground transition hover:bg-fg/8 disabled:pointer-events-none disabled:opacity-35"
         >
             {children}
         </button>

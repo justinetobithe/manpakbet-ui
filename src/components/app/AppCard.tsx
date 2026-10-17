@@ -19,7 +19,7 @@ export default function AppCard({ title, description, actions, icon, padded = tr
             {hasHeader ? (
                 <div className={cn("flex flex-wrap items-start justify-between gap-3", padded ? "px-4 pt-4 sm:px-5 sm:pt-5" : "px-4 pt-4")}>
                     <div className="flex min-w-0 items-start gap-3">
-                        {icon ? <div className="grid size-10 shrink-0 place-items-center rounded-xl bg-white/6 text-gold-300 ring-1 ring-white/10">{icon}</div> : null}
+                        {icon ? <div className="grid size-10 shrink-0 place-items-center rounded-xl bg-fg/6 text-gold-300 ring-1 ring-fg/10">{icon}</div> : null}
                         <div className="min-w-0">
                             {title ? <h3 className="text-base font-bold text-foreground">{title}</h3> : null}
                             {description ? <p className="mt-0.5 text-sm text-muted-foreground">{description}</p> : null}

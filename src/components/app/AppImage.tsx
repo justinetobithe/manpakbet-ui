@@ -19,7 +19,7 @@ export default function AppImage({ src, fallback = FALLBACK_IMAGE, alt = "", cla
 
     return (
         <span className={cn("relative block overflow-hidden bg-plum-800", wrapperClassName)}>
-            {!loaded ? <span className="absolute inset-0 animate-pulse bg-linear-to-br from-white/4 to-white/8" /> : null}
+            {!loaded ? <span className="absolute inset-0 animate-pulse bg-linear-to-br from-fg/4 to-fg/8" /> : null}
             <img
                 src={current}
                 alt={alt}

@@ -7,6 +7,7 @@ type AppLogoProps = {
     className?: string;
     size?: "sm" | "md" | "lg";
     textClassName?: string;
+    inverted?: boolean;
 };
 
 const markSizes = { sm: "size-8", md: "size-9", lg: "size-12" };
@@ -37,13 +38,13 @@ export function AppLogoMark({ className }: { className?: string }) {
     );
 }
 
-export default function AppLogo({ href = "/", compact = false, className, size = "md", textClassName }: AppLogoProps) {
+export default function AppLogo({ href = "/", compact = false, className, size = "md", textClassName, inverted = false }: AppLogoProps) {
     const content = (
         <span className={cn("inline-flex items-center gap-2.5", className)}>
             <AppLogoMark className={cn("shrink-0 drop-shadow-[0_6px_18px_rgba(255,194,61,0.35)]", markSizes[size])} />
             {!compact ? (
                 <span className={cn("font-display leading-none font-extrabold tracking-tight", textSizes[size], textClassName)}>
-                    <span className="text-foreground">Manpak</span>
+                    <span className={inverted ? "text-white" : "text-foreground"}>Manpak</span>
                     <span className="text-gold">Bet</span>
                 </span>
             ) : null}

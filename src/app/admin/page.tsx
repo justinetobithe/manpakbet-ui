@@ -31,7 +31,7 @@ export default function AdminDashboardPage() {
 
             <div className="grid gap-5 xl:grid-cols-[1.6fr_1fr]">
                 <AppCard title="Cash flow" description="Approved deposits and withdrawals, last 7 days" icon={<Banknote />}>
-                    {data?.series ? <TrendChart data={data.series} /> : <div className="h-60 animate-pulse rounded-xl bg-white/4" />}
+                    {data?.series ? <TrendChart data={data.series} /> : <div className="h-60 animate-pulse rounded-xl bg-fg/4" />}
                 </AppCard>
 
                 <AppCard title="Top games" description="By total plays" icon={<Gamepad2 />}>

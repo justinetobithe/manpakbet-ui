@@ -234,7 +234,7 @@ export default function AdminTransactionsPage() {
             >
                 {selected ? (
                     <div className="space-y-4">
-                        <div className="rounded-2xl border border-border bg-white/3 p-4 text-center">
+                        <div className="rounded-2xl border border-border bg-fg/3 p-4 text-center">
                             <AppAmount value={selected.amount} respectPrivacy={false} className="font-display text-3xl font-extrabold text-gold-200" />
                             <div className="mt-1">
                                 <AppBadge tone={statusTone(selected.status)} dot>

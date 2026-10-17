@@ -37,7 +37,7 @@ export default function AppStatCard({ label, value, icon, hint, tone = "gold", c
                     <div className="mt-2 truncate font-display text-2xl font-extrabold tabular-nums">{value}</div>
                     {hint ? <div className="mt-1 text-xs text-muted-foreground">{hint}</div> : null}
                 </div>
-                {icon ? <div className={cn("grid size-10 shrink-0 place-items-center rounded-xl bg-linear-to-br to-white/2 ring-1 ring-white/10 [&_svg]:size-5", tones[tone])}>{icon}</div> : null}
+                {icon ? <div className={cn("grid size-10 shrink-0 place-items-center rounded-xl bg-linear-to-br to-fg/2 ring-1 ring-fg/10 [&_svg]:size-5", tones[tone])}>{icon}</div> : null}
             </div>
         </motion.div>
     );

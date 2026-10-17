@@ -54,7 +54,7 @@ export default function SearchDialog() {
                         placeholder="Search slots, live tables, fishing…"
                         className="h-10 flex-1 bg-transparent text-base text-foreground outline-none placeholder:text-muted-foreground"
                     />
-                    <button type="button" onClick={() => setOpen(false)} className="grid size-8 place-items-center rounded-lg text-muted-foreground hover:bg-white/10" aria-label="Close search">
+                    <button type="button" onClick={() => setOpen(false)} className="grid size-8 place-items-center rounded-lg text-muted-foreground hover:bg-fg/10" aria-label="Close search">
                         <X className="size-4" />
                     </button>
                 </div>
@@ -79,7 +79,7 @@ export default function SearchDialog() {
                                         <div className="truncate text-xs font-semibold text-foreground/85 group-hover:text-gold-200">{game.name}</div>
                                     </Link>
                                 ) : (
-                                    <div key={index} className="aspect-[4/5] animate-pulse rounded-xl bg-white/5" />
+                                    <div key={index} className="aspect-[4/5] animate-pulse rounded-xl bg-fg/5" />
                                 )
                             )}
                         </div>

@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 const badgeVariants = cva("inline-flex items-center gap-1 rounded-full font-semibold whitespace-nowrap [&_svg]:size-3", {
     variants: {
         tone: {
-            neutral: "bg-white/7 text-foreground/80 ring-1 ring-white/10",
+            neutral: "bg-fg/7 text-foreground/80 ring-1 ring-fg/10",
             gold: "bg-gold-400/15 text-gold-300 ring-1 ring-gold-400/30",
             ember: "bg-ember-500/15 text-ember-400 ring-1 ring-ember-500/30",
             success: "bg-success/15 text-jade-400 ring-1 ring-success/30",

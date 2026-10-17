@@ -18,10 +18,10 @@ export default function ProviderMarquee({ providers }: { providers?: GameProvide
                     <Link
                         key={`${provider.id}-${index}`}
                         href={`/games?provider=${provider.slug}`}
-                        className="flex h-16 min-w-44 items-center justify-center gap-3 rounded-2xl border border-border bg-white/3 px-5 transition hover:border-gold-400/40 hover:bg-white/6"
+                        className="flex h-16 min-w-44 items-center justify-center gap-3 rounded-2xl border border-border bg-fg/3 px-5 transition hover:border-gold-400/40 hover:bg-fg/6"
                     >
                         <span className={`font-display text-lg font-extrabold tracking-tight ${tints[provider.id % tints.length]}`}>{provider.name}</span>
-                        {provider.games_count ? <span className="rounded-full bg-white/6 px-2 py-0.5 text-[10px] font-bold text-muted-foreground">{provider.games_count}</span> : null}
+                        {provider.games_count ? <span className="rounded-full bg-fg/6 px-2 py-0.5 text-[10px] font-bold text-muted-foreground">{provider.games_count}</span> : null}
                     </Link>
                 ))}
             </div>

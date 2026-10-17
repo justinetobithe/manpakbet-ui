@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { BadgeCheck, Banknote, Bell, ChevronRight, ExternalLink, LogOut, Menu, PanelLeftClose, PanelLeftOpen, Settings, UserRound } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { AppBadge, AppLogo } from "@/components/app";
+import { AppBadge, AppLogo, AppThemeToggle } from "@/components/app";
 import { adminNav } from "@/config/site";
 import { useAuth } from "@/hooks/useAuth";
 import { useAdminStats } from "@/lib/AdminAPI";
@@ -69,7 +69,7 @@ function SidebarNav({ collapsed, onNavigate }: { collapsed: boolean; onNavigate?
                                         className={cn(
                                             "group relative flex h-10 items-center gap-3 rounded-xl px-3 text-sm font-semibold transition",
                                             collapsed && "justify-center px-0",
-                                            active ? "bg-linear-to-r from-gold-400/18 to-transparent text-gold-200" : "text-foreground/70 hover:bg-white/5 hover:text-foreground"
+                                            active ? "bg-linear-to-r from-gold-400/18 to-transparent text-gold-200" : "text-foreground/70 hover:bg-fg/5 hover:text-foreground"
                                         )}
                                     >
                                         {active ? <span className="bg-gold absolute top-2 bottom-2 left-0 w-1 rounded-full" /> : null}
@@ -95,7 +95,7 @@ function ProfileCard({ collapsed }: { collapsed: boolean }) {
         <Link
             href="/admin/profile"
             className={cn(
-                "flex items-center gap-3 rounded-2xl border border-border bg-white/3 p-2 transition hover:border-gold-400/40",
+                "flex items-center gap-3 rounded-2xl border border-border bg-fg/3 p-2 transition hover:border-gold-400/40",
                 collapsed && "justify-center border-0 bg-transparent p-0",
                 pathname.startsWith("/admin/profile") && "border-gold-400/40"
             )}
@@ -123,7 +123,7 @@ function NotificationsMenu() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <button type="button" className="relative grid size-10 place-items-center rounded-xl border border-border bg-white/3 transition hover:bg-white/7" aria-label="Notifications">
+                <button type="button" className="relative grid size-10 place-items-center rounded-xl border border-border bg-fg/3 transition hover:bg-fg/7" aria-label="Notifications">
                     <Bell className="size-[18px]" />
                     {total ? <span className="bg-ember absolute -top-1 -right-1 grid min-w-5 place-items-center rounded-full px-1 text-[10px] font-bold text-white">{total > 99 ? "99+" : total}</span> : null}
                 </button>
@@ -132,7 +132,7 @@ function NotificationsMenu() {
                 <DropdownMenuLabel className="px-2.5 py-2 text-xs tracking-wider text-muted-foreground uppercase">Needs attention</DropdownMenuLabel>
                 <DropdownMenuSeparator className="bg-border" />
                 {can("transactions.view") ? (
-                    <DropdownMenuItem asChild className="cursor-pointer gap-3 rounded-xl px-2.5 py-2.5 focus:bg-white/7">
+                    <DropdownMenuItem asChild className="cursor-pointer gap-3 rounded-xl px-2.5 py-2.5 focus:bg-fg/7">
                         <Link href="/admin/transactions">
                             <span className="grid size-9 place-items-center rounded-lg bg-gold-400/15 text-gold-300">
                                 <Banknote className="size-4" />
@@ -145,7 +145,7 @@ function NotificationsMenu() {
                     </DropdownMenuItem>
                 ) : null}
                 {can("kyc.review") ? (
-                    <DropdownMenuItem asChild className="cursor-pointer gap-3 rounded-xl px-2.5 py-2.5 focus:bg-white/7">
+                    <DropdownMenuItem asChild className="cursor-pointer gap-3 rounded-xl px-2.5 py-2.5 focus:bg-fg/7">
                         <Link href="/admin/kyc">
                             <span className="grid size-9 place-items-center rounded-lg bg-violet-500/15 text-violet-300">
                                 <BadgeCheck className="size-4" />
@@ -170,7 +170,7 @@ function AccountMenu() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <button type="button" className="flex items-center gap-2.5 rounded-xl border border-border bg-white/3 py-1 pr-3 pl-1 transition hover:bg-white/7">
+                <button type="button" className="flex items-center gap-2.5 rounded-xl border border-border bg-fg/3 py-1 pr-3 pl-1 transition hover:bg-fg/7">
                     <span className="grid size-8 place-items-center rounded-lg bg-linear-to-br from-ember-500 to-gold-500 text-xs font-bold text-white">{initials(name)}</span>
                     <span className="hidden text-left leading-tight md:block">
                         <span className="block max-w-32 truncate text-xs font-bold">{name}</span>
@@ -189,19 +189,19 @@ function AccountMenu() {
                     </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator className="bg-border" />
-                <DropdownMenuItem asChild className="cursor-pointer gap-2.5 rounded-xl px-2.5 py-2 focus:bg-white/7 [&_svg]:size-4 [&_svg]:text-muted-foreground">
+                <DropdownMenuItem asChild className="cursor-pointer gap-2.5 rounded-xl px-2.5 py-2 focus:bg-fg/7 [&_svg]:size-4 [&_svg]:text-muted-foreground">
                     <Link href="/admin/profile">
                         <UserRound /> My profile
                     </Link>
                 </DropdownMenuItem>
                 {can("settings.manage") ? (
-                    <DropdownMenuItem asChild className="cursor-pointer gap-2.5 rounded-xl px-2.5 py-2 focus:bg-white/7 [&_svg]:size-4 [&_svg]:text-muted-foreground">
+                    <DropdownMenuItem asChild className="cursor-pointer gap-2.5 rounded-xl px-2.5 py-2 focus:bg-fg/7 [&_svg]:size-4 [&_svg]:text-muted-foreground">
                         <Link href="/admin/settings">
                             <Settings /> Settings
                         </Link>
                     </DropdownMenuItem>
                 ) : null}
-                <DropdownMenuItem asChild className="cursor-pointer gap-2.5 rounded-xl px-2.5 py-2 focus:bg-white/7 [&_svg]:size-4 [&_svg]:text-muted-foreground">
+                <DropdownMenuItem asChild className="cursor-pointer gap-2.5 rounded-xl px-2.5 py-2 focus:bg-fg/7 [&_svg]:size-4 [&_svg]:text-muted-foreground">
                     <Link href="/" target="_blank">
                         <ExternalLink /> View site
                     </Link>
@@ -242,7 +242,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
                     <button
                         type="button"
                         onClick={toggle}
-                        className={cn("flex h-9 w-full items-center gap-3 rounded-xl px-3 text-xs font-semibold text-muted-foreground transition hover:bg-white/5 hover:text-foreground", collapsed && "justify-center px-0")}
+                        className={cn("flex h-9 w-full items-center gap-3 rounded-xl px-3 text-xs font-semibold text-muted-foreground transition hover:bg-fg/5 hover:text-foreground", collapsed && "justify-center px-0")}
                     >
                         {collapsed ? <PanelLeftOpen className="size-4" /> : <PanelLeftClose className="size-4" />}
                         {!collapsed ? "Collapse sidebar" : null}
@@ -273,7 +273,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
 
             <div className="flex min-w-0 flex-1 flex-col">
                 <header className="glass sticky top-0 z-40 flex h-16 items-center gap-3 border-b border-border px-3 sm:px-6">
-                    <button type="button" onClick={() => setMobileOpen(true)} className="grid size-10 place-items-center rounded-xl hover:bg-white/6 lg:hidden" aria-label="Open navigation">
+                    <button type="button" onClick={() => setMobileOpen(true)} className="grid size-10 place-items-center rounded-xl hover:bg-fg/6 lg:hidden" aria-label="Open navigation">
                         <Menu className="size-5" />
                     </button>
                     <div className="min-w-0">
@@ -296,6 +296,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
                         <div className="truncate font-display text-base font-bold sm:text-lg">{title}</div>
                     </div>
                     <div className="ml-auto flex items-center gap-2">
+                        <AppThemeToggle />
                         <NotificationsMenu />
                         <AccountMenu />
                     </div>

@@ -44,7 +44,7 @@ export default function FeatureBand() {
                             viewport={{ once: true }}
                             transition={{ delay: 0.1 + index * 0.08, duration: 0.5 }}
                             whileHover={{ y: -4 }}
-                            className="rounded-2xl border border-border bg-black/25 p-5 backdrop-blur"
+                            className="rounded-2xl border border-border bg-fg/5 p-5 backdrop-blur"
                         >
                             <div className="mb-3 grid size-11 place-items-center rounded-xl bg-gold-400/15 text-gold-300 ring-1 ring-gold-400/25">
                                 <Icon className="size-5" />

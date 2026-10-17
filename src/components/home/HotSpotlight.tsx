@@ -60,7 +60,7 @@ export default function HotSpotlight() {
                         </Link>
                     </motion.div>
                 ) : (
-                    <div className="h-36 animate-pulse rounded-3xl bg-white/5" />
+                    <div className="h-36 animate-pulse rounded-3xl bg-fg/5" />
                 )}
 
                 <div className="grid grid-cols-4 gap-2 sm:grid-cols-6 sm:gap-2.5 lg:grid-cols-8">

@@ -31,14 +31,14 @@ export default function HeroCarousel({ banners, loading }: { banners?: Banner[];
         else if (info.offset.x > 60 || info.velocity.x > 400) paginate(-1);
     };
 
-    if (loading && !count) return <div className="aspect-[16/9] w-full animate-pulse rounded-3xl bg-white/5 sm:aspect-[21/8]" />;
+    if (loading && !count) return <div className="min-h-[340px] w-full animate-pulse rounded-3xl bg-fg/5 sm:min-h-[400px]" />;
     if (!count) return null;
 
     const slide = slides[active];
 
     return (
         <div
-            className="group relative aspect-[16/10] w-full overflow-hidden rounded-3xl border border-border bg-plum-900 sm:aspect-[21/8]"
+            className="group relative min-h-[340px] w-full overflow-hidden rounded-3xl border border-border bg-[#120a1f] text-white shadow-[0_24px_60px_-30px_rgba(29,21,48,0.6)] sm:min-h-[400px]"
             onMouseEnter={() => setPaused(true)}
             onMouseLeave={() => setPaused(false)}
         >
@@ -70,15 +70,15 @@ export default function HeroCarousel({ banners, loading }: { banners?: Banner[];
                         transition={{ duration: 7, ease: "linear" }}
                         className="absolute inset-0 h-full w-full object-cover"
                     />
-                    <div className="absolute inset-0 bg-linear-to-r from-plum-950/95 via-plum-950/60 to-transparent" />
-                    <div className="absolute inset-0 bg-linear-to-t from-plum-950/80 via-transparent to-transparent" />
+                    <div className="absolute inset-0 bg-linear-to-r from-[#0b0613]/90 via-[#0b0613]/55 to-transparent" />
+                    <div className="absolute inset-0 bg-linear-to-t from-[#0b0613]/75 via-transparent to-transparent" />
 
-                    <div className="relative flex h-full max-w-xl flex-col justify-end gap-3 p-5 pb-12 sm:justify-center sm:gap-4 sm:p-10 lg:p-14">
+                    <div className="relative flex h-full min-h-[340px] max-w-xl flex-col justify-end gap-3 p-5 pb-12 sm:min-h-[400px] sm:justify-center sm:gap-4 sm:p-10 lg:px-12 [&>*]:shrink-0">
                         <motion.span
                             initial={{ opacity: 0, y: 16 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.25 }}
-                            className="inline-flex w-fit items-center gap-1.5 rounded-full bg-ember-500/20 px-3 py-1 text-[10px] font-bold tracking-[0.2em] text-ember-400 uppercase ring-1 ring-ember-500/35"
+                            className="inline-flex w-fit items-center gap-1.5 rounded-full bg-ember-500/20 px-3 py-1 text-[10px] font-bold tracking-[0.2em] text-[#ff7aa8] uppercase ring-1 ring-ember-500/40"
                         >
                             <span className="size-1.5 animate-pulse rounded-full bg-ember-400" />
                             Featured
@@ -87,7 +87,7 @@ export default function HeroCarousel({ banners, loading }: { banners?: Banner[];
                             initial={{ opacity: 0, y: 22 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.35, duration: 0.6 }}
-                            className="font-display text-[26px] leading-[1.05] font-extrabold text-balance sm:text-4xl lg:text-5xl"
+                            className="font-display text-[28px] leading-[1.08] font-extrabold text-balance text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.45)] sm:text-4xl lg:text-[46px]"
                         >
                             {slide.title}
                         </motion.h2>
@@ -96,7 +96,7 @@ export default function HeroCarousel({ banners, loading }: { banners?: Banner[];
                                 initial={{ opacity: 0, y: 18 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.45, duration: 0.6 }}
-                                className="line-clamp-2 max-w-md text-sm text-foreground/75 sm:text-base"
+                                className="line-clamp-3 max-w-md text-sm leading-relaxed text-white/80 sm:text-base"
                             >
                                 {slide.subtitle}
                             </motion.p>
@@ -123,7 +123,7 @@ export default function HeroCarousel({ banners, loading }: { banners?: Banner[];
                                 key={item.id}
                                 type="button"
                                 onClick={() => setState([i, i > active ? 1 : -1])}
-                                className="relative h-1.5 overflow-hidden rounded-full bg-white/20 transition-all"
+                                className="relative h-1.5 overflow-hidden rounded-full bg-fg/20 transition-all"
                                 style={{ width: i === active ? 40 : 14 }}
                                 aria-label={`Go to slide ${i + 1}`}
                             >

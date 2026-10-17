@@ -45,7 +45,7 @@ export default function PromotionsView() {
             {isLoading ? (
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     {Array.from({ length: 6 }).map((_, index) => (
-                        <div key={index} className="h-80 animate-pulse rounded-3xl bg-white/5" />
+                        <div key={index} className="h-80 animate-pulse rounded-3xl bg-fg/5" />
                     ))}
                 </div>
             ) : list.length ? (

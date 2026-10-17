@@ -12,7 +12,7 @@ export default function PostDetail({ slug }: { slug: string }) {
     const { data: post, isLoading, isError } = usePost(slug);
     const { data: latest } = usePosts(undefined, 1, 6);
 
-    if (isLoading) return <div className="h-[480px] animate-pulse rounded-3xl bg-white/5" />;
+    if (isLoading) return <div className="h-[480px] animate-pulse rounded-3xl bg-fg/5" />;
 
     if (isError || !post) {
         return (

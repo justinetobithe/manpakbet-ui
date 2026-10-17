@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme inline {
     --color-background: var(--background);
     --color-foreground: var(--foreground);
@@ -26,23 +28,24 @@
     --color-border: var(--border);
     --color-input: var(--input);
     --color-ring: var(--ring);
+    --color-fg: var(--fg);
 
     --color-gold-50: #fff8e6;
-    --color-gold-200: #ffe3a1;
-    --color-gold-300: #ffd36b;
+    --color-gold-200: var(--gold-200);
+    --color-gold-300: var(--gold-300);
     --color-gold-400: #ffc23d;
     --color-gold-500: #f5a524;
     --color-gold-600: #d9850f;
-    --color-ember-400: #ff5c93;
+    --color-ember-400: var(--ember-400);
     --color-ember-500: #ff2e74;
     --color-ember-600: #e0115b;
-    --color-plum-950: #0b0613;
-    --color-plum-900: #120a1f;
-    --color-plum-850: #170e27;
-    --color-plum-800: #1d1231;
-    --color-plum-700: #2a1b45;
-    --color-plum-600: #3a2760;
-    --color-jade-400: #2ee6a8;
+    --color-plum-950: var(--plum-950);
+    --color-plum-900: var(--plum-900);
+    --color-plum-850: var(--plum-850);
+    --color-plum-800: var(--plum-800);
+    --color-plum-700: var(--plum-700);
+    --color-plum-600: var(--plum-600);
+    --color-jade-400: var(--jade-400);
     --color-jade-500: #12c98c;
 
     --radius-sm: calc(var(--radius) - 6px);
@@ -99,6 +102,66 @@
 :root {
     --radius: 0.875rem;
 
+    --background: #f4f1fa;
+    --foreground: #1d1530;
+    --card: #ffffff;
+    --card-foreground: #1d1530;
+    --popover: #ffffff;
+    --popover-foreground: #1d1530;
+    --primary: #f5a524;
+    --primary-foreground: #1a0f00;
+    --secondary: #ece6f7;
+    --secondary-foreground: #1d1530;
+    --muted: #efeaf7;
+    --muted-foreground: #6a6182;
+    --accent: #e0115b;
+    --accent-foreground: #ffffff;
+    --destructive: #dc2f45;
+    --success: #0f9e6e;
+    --warning: #c27a07;
+    --border: rgba(52, 30, 92, 0.11);
+    --input: rgba(52, 30, 92, 0.16);
+    --ring: #f5a524;
+    --fg: #2a1b45;
+
+    --gold-200: #8f5a00;
+    --gold-300: #a96b00;
+    --ember-400: #d60f56;
+    --jade-400: #0b8f63;
+    --plum-950: #f4f1fa;
+    --plum-900: #efeaf7;
+    --plum-850: #ffffff;
+    --plum-800: #f6f2fc;
+    --plum-700: #ebe4f6;
+    --plum-600: #ddd2ee;
+
+    --color-red-200: #c81e3a;
+    --color-red-300: #c81e3a;
+    --color-sky-200: #0369a1;
+    --color-sky-300: #0369a1;
+    --color-violet-300: #6d28d9;
+    --color-amber-300: #a16207;
+    --color-emerald-200: #047857;
+    --color-fuchsia-200: #a21caf;
+    --color-amber-200: #a16207;
+
+    --surface-from: rgba(255, 255, 255, 0.92);
+    --surface-to: rgba(255, 255, 255, 0.86);
+    --surface-shadow: 0 1px 2px rgba(52, 30, 92, 0.05), 0 8px 24px -12px rgba(52, 30, 92, 0.12);
+    --glass: rgba(255, 255, 255, 0.82);
+    --stage-a: rgba(255, 46, 116, 0.07);
+    --stage-b: rgba(245, 165, 36, 0.09);
+    --stage-c: rgba(124, 58, 237, 0.07);
+    --text-gold-from: #b77400;
+    --text-gold-mid: #d98a0b;
+    --text-gold-to: #a85f00;
+    --prose: rgba(29, 21, 48, 0.78);
+    --scrollbar: rgba(52, 30, 92, 0.2);
+
+    color-scheme: light;
+}
+
+.dark {
     --background: #0b0613;
     --foreground: #f6f1ff;
     --card: #150c24;
@@ -119,6 +182,41 @@
     --border: rgba(196, 170, 255, 0.12);
     --input: rgba(196, 170, 255, 0.16);
     --ring: #ffc23d;
+    --fg: #ffffff;
+
+    --gold-200: #ffe3a1;
+    --gold-300: #ffd36b;
+    --ember-400: #ff5c93;
+    --jade-400: #2ee6a8;
+    --plum-950: #0b0613;
+    --plum-900: #120a1f;
+    --plum-850: #170e27;
+    --plum-800: #1d1231;
+    --plum-700: #2a1b45;
+    --plum-600: #3a2760;
+
+    --color-red-200: oklch(88.5% 0.062 18.334);
+    --color-red-300: oklch(80.8% 0.114 19.571);
+    --color-sky-200: oklch(90.1% 0.058 230.902);
+    --color-sky-300: oklch(82.8% 0.111 230.318);
+    --color-violet-300: oklch(81.1% 0.111 293.571);
+    --color-amber-300: oklch(87.9% 0.169 91.605);
+    --color-emerald-200: oklch(90.5% 0.093 164.15);
+    --color-fuchsia-200: oklch(90.3% 0.076 319.62);
+    --color-amber-200: oklch(92.4% 0.12 95.746);
+
+    --surface-from: rgba(36, 22, 56, 0.72);
+    --surface-to: rgba(21, 12, 36, 0.72);
+    --surface-shadow: none;
+    --glass: rgba(18, 10, 31, 0.72);
+    --stage-a: rgba(255, 46, 116, 0.16);
+    --stage-b: rgba(255, 194, 61, 0.11);
+    --stage-c: rgba(108, 63, 196, 0.22);
+    --text-gold-from: #fff1c2;
+    --text-gold-mid: #ffd36b;
+    --text-gold-to: #f5a524;
+    --prose: rgba(246, 241, 255, 0.78);
+    --scrollbar: rgba(196, 170, 255, 0.18);
 
     color-scheme: dark;
 }
@@ -135,6 +233,9 @@
     body {
         @apply bg-background text-foreground font-sans antialiased;
         min-height: 100dvh;
+        transition:
+            background-color 0.25s ease,
+            color 0.25s ease;
     }
 
     h1,
@@ -145,23 +246,22 @@
     }
 
     ::selection {
-        background: rgba(255, 194, 61, 0.35);
-        color: #fff;
+        background: rgba(245, 165, 36, 0.35);
     }
 
     * {
         scrollbar-width: thin;
-        scrollbar-color: rgba(196, 170, 255, 0.18) transparent;
+        scrollbar-color: var(--scrollbar) transparent;
     }
 }
 
 @layer utilities {
     .bg-stage {
         background:
-            radial-gradient(1100px 620px at 12% -10%, rgba(255, 46, 116, 0.16), transparent 60%),
-            radial-gradient(900px 560px at 95% 8%, rgba(255, 194, 61, 0.11), transparent 60%),
-            radial-gradient(1200px 700px at 50% 110%, rgba(108, 63, 196, 0.22), transparent 65%),
-            #0b0613;
+            radial-gradient(1100px 620px at 12% -10%, var(--stage-a), transparent 60%),
+            radial-gradient(900px 560px at 95% 8%, var(--stage-b), transparent 60%),
+            radial-gradient(1200px 700px at 50% 110%, var(--stage-c), transparent 65%),
+            var(--background);
     }
 
     .bg-grain {
@@ -169,25 +269,27 @@
     }
 
     .surface {
-        background: linear-gradient(180deg, rgba(36, 22, 56, 0.72), rgba(21, 12, 36, 0.72));
+        background: linear-gradient(180deg, var(--surface-from), var(--surface-to));
         border: 1px solid var(--border);
+        box-shadow: var(--surface-shadow);
         backdrop-filter: blur(14px);
         -webkit-backdrop-filter: blur(14px);
     }
 
     .surface-strong {
-        background: linear-gradient(180deg, #1f1333, #150c24);
+        background: var(--card);
         border: 1px solid var(--border);
+        box-shadow: var(--surface-shadow);
     }
 
     .glass {
-        background: rgba(18, 10, 31, 0.72);
+        background: var(--glass);
         backdrop-filter: blur(18px) saturate(140%);
         -webkit-backdrop-filter: blur(18px) saturate(140%);
     }
 
     .text-gold {
-        background: linear-gradient(180deg, #fff1c2 0%, #ffd36b 38%, #f5a524 100%);
+        background: linear-gradient(180deg, var(--text-gold-from) 0%, var(--text-gold-mid) 45%, var(--text-gold-to) 100%);
         -webkit-background-clip: text;
         background-clip: text;
         color: transparent;
@@ -217,7 +319,7 @@
         inset: 0;
         padding: 1px;
         border-radius: inherit;
-        background: linear-gradient(135deg, rgba(255, 211, 107, 0.65), rgba(255, 46, 116, 0.35) 45%, rgba(196, 170, 255, 0.12));
+        background: linear-gradient(135deg, rgba(245, 165, 36, 0.65), rgba(255, 46, 116, 0.35) 45%, var(--border));
         -webkit-mask:
             linear-gradient(#000 0 0) content-box,
             linear-gradient(#000 0 0);
@@ -228,7 +330,7 @@
 
     .divider-fade {
         height: 1px;
-        background: linear-gradient(90deg, transparent, rgba(196, 170, 255, 0.22), transparent);
+        background: linear-gradient(90deg, transparent, var(--input), transparent);
     }
 
     .no-scrollbar {
@@ -250,14 +352,14 @@
     .prose-content p {
         margin: 0 0 0.9rem;
         line-height: 1.75;
-        color: rgba(246, 241, 255, 0.78);
+        color: var(--prose);
     }
 
     .prose-content ul {
         margin: 0 0 1rem;
         padding-left: 1.2rem;
         list-style: disc;
-        color: rgba(246, 241, 255, 0.78);
+        color: var(--prose);
     }
 
     .prose-content li {

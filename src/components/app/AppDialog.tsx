@@ -40,7 +40,7 @@ export default function AppDialog({ open, onOpenChange, title, description, foot
                     {description ? <DialogDescription className="text-sm text-muted-foreground">{description}</DialogDescription> : null}
                 </DialogHeader>
                 <div className={cn("min-h-0 flex-1 overflow-y-auto px-5 py-5 sm:px-6", bodyClassName)}>{children}</div>
-                {footer ? <div className="flex shrink-0 flex-wrap items-center justify-end gap-2 border-t border-border bg-black/20 px-5 py-4 sm:px-6">{footer}</div> : null}
+                {footer ? <div className="flex shrink-0 flex-wrap items-center justify-end gap-2 border-t border-border bg-fg/5 px-5 py-4 sm:px-6">{footer}</div> : null}
             </DialogContent>
         </Dialog>
     );

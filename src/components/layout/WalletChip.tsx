@@ -13,14 +13,14 @@ export default function WalletChip({ className }: { className?: string }) {
     const openWallet = useUiStore((state) => state.openWallet);
 
     return (
-        <div className={cn("flex items-center rounded-2xl border border-border bg-black/30 p-1 pl-3", className)}>
+        <div className={cn("flex items-center rounded-2xl border border-border bg-fg/5 p-1 pl-3", className)}>
             <div className="flex items-center gap-1.5">
                 <span className="hidden text-[10px] font-bold tracking-wider text-muted-foreground uppercase xl:inline">Balance</span>
                 <AppAmount value={data?.balance} className="text-sm font-bold text-gold-200" />
                 <button
                     type="button"
                     onClick={toggleHidden}
-                    className="grid size-7 place-items-center rounded-lg text-muted-foreground transition hover:bg-white/10 hover:text-foreground"
+                    className="grid size-7 place-items-center rounded-lg text-muted-foreground transition hover:bg-fg/10 hover:text-foreground"
                     aria-label={hidden ? "Show balance" : "Hide balance"}
                 >
                     {hidden ? <EyeOff className="size-3.5" /> : <Eye className="size-3.5" />}
@@ -28,7 +28,7 @@ export default function WalletChip({ className }: { className?: string }) {
                 <button
                     type="button"
                     onClick={() => refetch()}
-                    className="hidden size-7 place-items-center rounded-lg text-muted-foreground transition hover:bg-white/10 hover:text-foreground sm:grid"
+                    className="hidden size-7 place-items-center rounded-lg text-muted-foreground transition hover:bg-fg/10 hover:text-foreground sm:grid"
                     aria-label="Refresh balance"
                 >
                     <RefreshCw className={cn("size-3.5", isFetching && "animate-spin")} />

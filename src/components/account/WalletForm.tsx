@@ -123,7 +123,7 @@ export default function WalletForm({ tab, onTabChange, onDone, compact }: Wallet
 
     return (
         <div className="space-y-5">
-            <div className="grid grid-cols-2 gap-1 rounded-2xl border border-border bg-black/30 p-1">
+            <div className="grid grid-cols-2 gap-1 rounded-2xl border border-border bg-fg/5 p-1">
                 {(["deposit", "withdraw"] as const).map((item) => (
                     <button
                         key={item}
@@ -187,7 +187,7 @@ export default function WalletForm({ tab, onTabChange, onDone, compact }: Wallet
                                     aria-pressed={active}
                                     className={cn(
                                         "relative flex items-center gap-3 rounded-2xl border p-2.5 text-left transition",
-                                        active ? "border-gold-400/70 bg-gold-400/10 ring-2 ring-gold-400/25" : "border-border bg-white/3 hover:border-white/25"
+                                        active ? "border-gold-400/70 bg-gold-400/10 ring-2 ring-gold-400/25" : "border-border bg-fg/3 hover:border-fg/25"
                                     )}
                                 >
                                     <img src={method.logo} alt="" className={cn("size-11 shrink-0 rounded-xl bg-white object-contain p-1", active && `ring-2 ${method.ring}`)} />
@@ -237,7 +237,7 @@ export default function WalletForm({ tab, onTabChange, onDone, compact }: Wallet
                             onClick={() => form.setValue("amount", String(amount), { shouldValidate: true })}
                             className={cn(
                                 "rounded-full border px-3 py-1.5 text-xs font-bold transition",
-                                String(amountValue) === String(amount) ? "border-gold-400/60 bg-gold-400/15 text-gold-200" : "border-border text-foreground/70 hover:border-white/25"
+                                String(amountValue) === String(amount) ? "border-gold-400/60 bg-gold-400/15 text-gold-200" : "border-border text-foreground/70 hover:border-fg/25"
                             )}
                         >
                             ₱{amount.toLocaleString()}

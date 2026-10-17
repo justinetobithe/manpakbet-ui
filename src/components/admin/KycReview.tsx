@@ -68,7 +68,7 @@ export function KycDetails({ submission }: { submission: KycSubmission }) {
                 </div>
             </div>
             {submission.reviewed_at ? (
-                <div className="rounded-xl border border-border bg-white/3 p-3 text-xs text-muted-foreground">
+                <div className="rounded-xl border border-border bg-fg/3 p-3 text-xs text-muted-foreground">
                     Reviewed {formatDateTime(submission.reviewed_at)} by {fullName(submission.reviewer)}
                     {submission.rejection_reason ? <div className="mt-1 text-red-300">Reason: {submission.rejection_reason}</div> : null}
                 </div>
@@ -170,7 +170,7 @@ export function KycReviewDialog({ id, onOpenChange }: { id: number | null; onOpe
             }
         >
             {isLoading || !data ? (
-                <div className="h-80 animate-pulse rounded-xl bg-white/5" />
+                <div className="h-80 animate-pulse rounded-xl bg-fg/5" />
             ) : (
                 <div className="space-y-4">
                     <div className="flex flex-wrap items-center gap-2">

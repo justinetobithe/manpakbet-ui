@@ -60,7 +60,7 @@ export default function AccountOverviewPage() {
                 {isLoading ? (
                     <div className="space-y-3">
                         {Array.from({ length: 4 }).map((_, index) => (
-                            <div key={index} className="h-12 animate-pulse rounded-xl bg-white/5" />
+                            <div key={index} className="h-12 animate-pulse rounded-xl bg-fg/5" />
                         ))}
                     </div>
                 ) : transactions?.data.length ? (

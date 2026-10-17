@@ -50,7 +50,7 @@ function ImageField({ control, field }: { control: FormControl; field: AdminFiel
     return (
         <AppFieldShell label={field.label} hint={field.hint ?? "Upload an image or paste a URL/path"} error={fieldState.error?.message}>
             <div className="flex gap-3">
-                <div className="relative size-20 shrink-0 overflow-hidden rounded-xl border border-border bg-white/3">
+                <div className="relative size-20 shrink-0 overflow-hidden rounded-xl border border-border bg-fg/3">
                     {value ? <AppImage src={value} alt="" wrapperClassName="absolute inset-0" /> : <ImagePlus className="absolute inset-0 m-auto size-6 text-muted-foreground" />}
                     {uploading ? (
                         <div className="absolute inset-0 grid place-items-center bg-black/60">
@@ -62,7 +62,7 @@ function ImageField({ control, field }: { control: FormControl; field: AdminFiel
                     <div className="relative">
                         <input value={value} onChange={(event) => controller.onChange(event.target.value)} placeholder="/storage/uploads/…" className={cn(inputClass, "pr-9")} />
                         {value ? (
-                            <button type="button" onClick={() => controller.onChange("")} className="absolute top-1/2 right-2 grid size-7 -translate-y-1/2 place-items-center rounded-md text-muted-foreground hover:bg-white/10" aria-label="Clear image">
+                            <button type="button" onClick={() => controller.onChange("")} className="absolute top-1/2 right-2 grid size-7 -translate-y-1/2 place-items-center rounded-md text-muted-foreground hover:bg-fg/10" aria-label="Clear image">
                                 <X className="size-3.5" />
                             </button>
                         ) : null}
@@ -72,7 +72,7 @@ function ImageField({ control, field }: { control: FormControl; field: AdminFiel
                         type="button"
                         onClick={() => inputRef.current?.click()}
                         disabled={uploading}
-                        className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-border bg-white/4 px-3 text-xs font-semibold transition hover:border-gold-400/40 disabled:opacity-50"
+                        className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-border bg-fg/4 px-3 text-xs font-semibold transition hover:border-gold-400/40 disabled:opacity-50"
                     >
                         <ImagePlus className="size-3.5" /> Upload image
                     </button>

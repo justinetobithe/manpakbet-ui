@@ -39,7 +39,7 @@ export default function CategoryBar({ activeSlug, view, className }: CategoryBar
                     href={item.href}
                     className={cn(
                         "relative inline-flex h-10 shrink-0 items-center gap-2 rounded-xl border px-3.5 text-[13px] font-semibold whitespace-nowrap transition",
-                        item.active ? "border-transparent text-[#2a1600]" : "border-border bg-white/3.5 text-foreground/75 hover:border-white/20 hover:text-foreground"
+                        item.active ? "border-transparent text-[#2a1600]" : "border-border bg-fg/3.5 text-foreground/75 hover:border-fg/20 hover:text-foreground"
                     )}
                 >
                     {item.active ? <motion.span layoutId="category-active" className="bg-gold ring-gold absolute inset-0 rounded-xl" transition={{ type: "spring", stiffness: 400, damping: 34 }} /> : null}
@@ -47,7 +47,7 @@ export default function CategoryBar({ activeSlug, view, className }: CategoryBar
                     <span className="relative">{item.label}</span>
                 </Link>
             ))}
-            {isLoading ? Array.from({ length: 5 }).map((_, index) => <div key={index} className="h-10 w-28 shrink-0 animate-pulse rounded-xl bg-white/5" />) : null}
+            {isLoading ? Array.from({ length: 5 }).map((_, index) => <div key={index} className="h-10 w-28 shrink-0 animate-pulse rounded-xl bg-fg/5" />) : null}
         </div>
     );
 }

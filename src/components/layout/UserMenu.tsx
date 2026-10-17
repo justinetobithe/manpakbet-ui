@@ -65,7 +65,7 @@ export default function UserMenu() {
 
 function MenuLink({ href, icon, label }: { href: string; icon: React.ReactNode; label: string }) {
     return (
-        <DropdownMenuItem asChild className="cursor-pointer gap-2.5 rounded-xl px-2.5 py-2 focus:bg-white/7 [&_svg]:size-4 [&_svg]:text-muted-foreground">
+        <DropdownMenuItem asChild className="cursor-pointer gap-2.5 rounded-xl px-2.5 py-2 focus:bg-fg/7 [&_svg]:size-4 [&_svg]:text-muted-foreground">
             <Link href={href}>
                 {icon}
                 {label}

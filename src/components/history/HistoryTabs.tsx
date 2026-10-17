@@ -132,7 +132,7 @@ export default function HistoryTabs({ userId, initialTab = "all", onTabChange }:
                         onClick={() => change(item.id)}
                         className={cn(
                             "relative inline-flex h-10 shrink-0 items-center gap-2 rounded-xl border px-4 text-sm font-semibold transition",
-                            tab === item.id ? "border-transparent text-[#2a1600]" : "border-border bg-white/3 text-foreground/70 hover:text-foreground"
+                            tab === item.id ? "border-transparent text-[#2a1600]" : "border-border bg-fg/3 text-foreground/70 hover:text-foreground"
                         )}
                     >
                         {tab === item.id ? <motion.span layoutId={`history-tab-${userId ?? "me"}`} className="bg-gold absolute inset-0 rounded-xl" transition={{ type: "spring", stiffness: 420, damping: 34 }} /> : null}

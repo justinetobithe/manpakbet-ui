@@ -37,7 +37,7 @@ export default function AppSection({ title, icon, href, hrefLabel = "See all", s
                 <div className="flex shrink-0 items-center gap-2">
                     {actions}
                     {href ? (
-                        <Link href={href} className="group inline-flex items-center gap-0.5 rounded-full border border-border bg-white/4 px-3 py-1.5 text-xs font-semibold text-foreground/80 transition hover:border-gold-400/40 hover:text-gold-300">
+                        <Link href={href} className="group inline-flex items-center gap-0.5 rounded-full border border-border bg-fg/4 px-3 py-1.5 text-xs font-semibold text-foreground/80 transition hover:border-gold-400/40 hover:text-gold-300">
                             {hrefLabel}
                             <ChevronRight className="size-3.5 transition group-hover:translate-x-0.5" />
                         </Link>

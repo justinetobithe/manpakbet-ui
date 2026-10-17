@@ -20,7 +20,7 @@ function PermissionGrid({ permissions, value, onChange, disabled }: { permission
     return (
         <div className="grid gap-3 sm:grid-cols-2">
             {Object.entries(groups).map(([group, items]) => (
-                <div key={group} className="rounded-xl border border-border bg-white/2 p-3">
+                <div key={group} className="rounded-xl border border-border bg-fg/2 p-3">
                     <div className="mb-2 text-[10px] font-bold tracking-[0.18em] text-gold-300/90 uppercase">{titleCase(group)}</div>
                     <div className="space-y-2">
                         {items.map((permission) => {
@@ -31,7 +31,7 @@ function PermissionGrid({ permissions, value, onChange, disabled }: { permission
                                         checked={checked}
                                         disabled={disabled}
                                         onCheckedChange={(state) => onChange(state ? [...value, permission.name] : value.filter((item) => item !== permission.name))}
-                                        className="mt-0.5 border-white/30 data-[state=checked]:border-gold-400 data-[state=checked]:bg-gold-400 data-[state=checked]:text-[#2a1600]"
+                                        className="mt-0.5 border-fg/30 data-[state=checked]:border-gold-400 data-[state=checked]:bg-gold-400 data-[state=checked]:text-[#2a1600]"
                                     />
                                     <span>
                                         <span className="block font-semibold">{permission.name}</span>
@@ -164,7 +164,7 @@ export default function AdminRolesPage() {
             {isLoading ? (
                 <div className="grid gap-4 xl:grid-cols-2">
                     {Array.from({ length: 3 }).map((_, index) => (
-                        <div key={index} className="h-72 animate-pulse rounded-2xl bg-white/5" />
+                        <div key={index} className="h-72 animate-pulse rounded-2xl bg-fg/5" />
                     ))}
                 </div>
             ) : (

@@ -77,7 +77,7 @@ export default function AuthForm({ mode, onModeChange, onSuccess, redirectAfter 
 
     return (
         <div className="w-full">
-            <div className="relative grid grid-cols-2 rounded-2xl border border-border bg-black/30 p-1">
+            <div className="relative grid grid-cols-2 rounded-2xl border border-border bg-fg/5 p-1">
                 {(["login", "register"] as const).map((item) => (
                     <button
                         key={item}
@@ -111,14 +111,14 @@ export default function AuthForm({ mode, onModeChange, onSuccess, redirectAfter 
                 </motion.div>
             </AnimatePresence>
 
-            <label className={cn("mt-5 flex cursor-pointer items-start gap-3 rounded-2xl border bg-white/2.5 p-3 transition", agreeError && !agree ? "border-destructive/60" : "border-border")}>
+            <label className={cn("mt-5 flex cursor-pointer items-start gap-3 rounded-2xl border bg-fg/2.5 p-3 transition", agreeError && !agree ? "border-destructive/60" : "border-border")}>
                 <Checkbox
                     checked={agree}
                     onCheckedChange={(value) => {
                         setAgree(Boolean(value));
                         setAgreeError(false);
                     }}
-                    className="mt-0.5 border-white/30 data-[state=checked]:border-gold-400 data-[state=checked]:bg-gold-400 data-[state=checked]:text-[#2a1600]"
+                    className="mt-0.5 border-fg/30 data-[state=checked]:border-gold-400 data-[state=checked]:bg-gold-400 data-[state=checked]:text-[#2a1600]"
                 />
                 <span className="text-xs leading-relaxed text-muted-foreground">
                     I confirm I am at least 21 years old, not a restricted person, and I agree to the{" "}
