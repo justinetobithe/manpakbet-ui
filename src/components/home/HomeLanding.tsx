@@ -5,7 +5,7 @@ import { Crown, Flame, Gift, Newspaper, Sparkles, Trophy } from "lucide-react";
 import { AppSection } from "@/components/app";
 import CategoryBar from "@/components/games/CategoryBar";
 import GameRail from "@/components/games/GameRail";
-import { useCategories, useGames, useProviders } from "@/lib/CasinoAPI";
+import { useLandingCategories, useLandingGames, useLandingProviders } from "@/lib/LandingData";
 import { useBanners, usePosts, usePromotions } from "@/lib/ContentAPI";
 import CategoryTiles from "./CategoryTiles";
 import FeatureBand from "./FeatureBand";
@@ -21,13 +21,13 @@ import TrendingBoard from "./TrendingBoard";
 export default function HomeLanding() {
     const hero = useBanners("hero");
     const side = useBanners("side");
-    const categories = useCategories(true);
-    const providers = useProviders();
+    const categories = useLandingCategories(true);
+    const providers = useLandingProviders();
     const promotions = usePromotions();
     const posts = usePosts(undefined, 1, 4);
-    const trending = useGames({ sort: "popular", per_page: 10 });
-    const featured = useGames({ featured: true, per_page: 18 });
-    const newest = useGames({ sort: "newest", per_page: 18 });
+    const trending = useLandingGames("popular", { sort: "popular", per_page: 10 });
+    const featured = useLandingGames("featured", { featured: true, per_page: 18 });
+    const newest = useLandingGames("newest", { sort: "newest", per_page: 18 });
     const totalGames = categories.data?.reduce((sum, category) => sum + (category.games_count ?? 0), 0) ?? 0;
 
     return (

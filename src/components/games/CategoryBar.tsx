@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { Clock3, Gamepad2, Heart, LayoutGrid } from "lucide-react";
 import { categoryIcons } from "@/config/site";
-import { useCategories } from "@/lib/CasinoAPI";
+import { useLandingCategories } from "@/lib/LandingData";
 import { cn } from "@/lib/utils";
 
 type CategoryBarProps = {
@@ -16,7 +16,7 @@ type CategoryBarProps = {
 
 export default function CategoryBar({ activeSlug, view, className }: CategoryBarProps) {
     const pathname = usePathname() ?? "/";
-    const { data: categories, isLoading } = useCategories();
+    const { data: categories, isLoading } = useLandingCategories();
 
     const items = [
         { key: "all", label: "All Games", href: "/games", icon: LayoutGrid, active: pathname === "/games" && !view },

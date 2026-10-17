@@ -6,14 +6,14 @@ import { Crown, Flame, Play, Users } from "lucide-react";
 import { AppButton, AppImage, AppSection } from "@/components/app";
 import GameCard, { GameCardSkeleton } from "@/components/games/GameCard";
 import { gameImage } from "@/lib/assets";
-import { useGames } from "@/lib/CasinoAPI";
+import { useLandingGames } from "@/lib/LandingData";
 import { formatCompact } from "@/lib/format";
 
 const GRID_SIZE = 16;
 
 export default function HotSpotlight() {
-    const hot = useGames({ badge: "hot", per_page: 12 });
-    const popular = useGames({ sort: "popular", per_page: 24 });
+    const hot = useLandingGames("hot", { badge: "hot", per_page: 12 });
+    const popular = useLandingGames("popular", { sort: "popular", per_page: 24 });
     const hotGames = hot.data?.data ?? [];
     const [spotlight] = hotGames;
     const seen = new Set(hotGames.map((game) => game.id));

@@ -21,6 +21,9 @@ export default function AppImage({ src, fallback = FALLBACK_IMAGE, alt = "", cla
         <span className={cn("relative block overflow-hidden bg-plum-800", wrapperClassName)}>
             {!loaded ? <span className="absolute inset-0 animate-pulse bg-linear-to-br from-fg/4 to-fg/8" /> : null}
             <img
+                ref={(node) => {
+                    if (node?.complete && node.naturalWidth > 0 && loadedSrc !== current) setLoadedSrc(current);
+                }}
                 src={current}
                 alt={alt}
                 loading="lazy"

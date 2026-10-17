@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "games:sync": "node scripts/sync-landing-games.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

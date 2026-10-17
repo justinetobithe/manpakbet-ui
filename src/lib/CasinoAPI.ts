@@ -60,10 +60,11 @@ export const getRounds = async (page = 1, perPage = 15) => {
     return data;
 };
 
-export const useCategories = (withGames = false) =>
+export const useCategories = (withGames = false, enabled = true) =>
     useQuery({
         queryKey: casinoKeys.categories(withGames),
         queryFn: () => getCategories(withGames),
+        enabled,
         staleTime: 5 * 60 * 1000,
     });
 
@@ -75,10 +76,11 @@ export const useCategory = (slug: string) =>
         staleTime: 5 * 60 * 1000,
     });
 
-export const useProviders = () =>
+export const useProviders = (enabled = true) =>
     useQuery({
         queryKey: casinoKeys.providers(),
         queryFn: getProviders,
+        enabled,
         staleTime: 10 * 60 * 1000,
     });
 
