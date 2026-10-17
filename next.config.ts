@@ -28,6 +28,8 @@ const nextConfig: NextConfig = {
             { source: "/dashboard", destination: "/account", permanent: false },
             { source: "/user/:path*", destination: "/account", permanent: false },
             { source: "/casino/:category", destination: "/games/:category", permanent: true },
+            { source: "/account/transactions", destination: "/account/history", permanent: true },
+            { source: "/account/games", destination: "/account/history?tab=bets", permanent: true },
         ];
     },
 };

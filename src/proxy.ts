@@ -16,6 +16,9 @@ const ADMIN_ROUTE_PERMISSIONS: Array<[string, string]> = [
     ["/admin/promotions", "content.manage"],
     ["/admin/news", "content.manage"],
     ["/admin/roles", "roles.manage"],
+    ["/admin/kyc", "kyc.review"],
+    ["/admin/rounds", "transactions.view"],
+    ["/admin/settings", "settings.manage"],
 ];
 
 const startsWith = (pathname: string, prefix: string) => pathname === prefix || pathname.startsWith(`${prefix}/`);
@@ -44,6 +47,7 @@ export async function proxy(request: NextRequest) {
 
     if (PLAYER_PAGES.some((page) => startsWith(pathname, page)) || /^\/play\/[^/]+\/launch\/?$/.test(pathname)) {
         if (!token) return redirectTo(request, "/login", true, expired);
+        if (isBackoffice && PLAYER_PAGES.some((page) => startsWith(pathname, page))) return redirectTo(request, "/admin/profile");
         return NextResponse.next();
     }
 

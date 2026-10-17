@@ -3,7 +3,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import type { ApiEnvelope } from "@/types/Api";
+import type { KycOverview, KycSubmission } from "@/types/Kyc";
 import type { PasswordInput, ProfileInput, User } from "@/types/User";
+import type { HistorySummary } from "@/types/Wallet";
 
 export const profileKeys = {
     me: () => ["profile", "me"] as const,
@@ -35,3 +37,29 @@ export const useUpdateProfile = () => {
 };
 
 export const useUpdatePassword = () => useMutation({ mutationFn: updatePassword });
+
+export const useKyc = (enabled = true) =>
+    useQuery({
+        queryKey: ["profile", "kyc"],
+        queryFn: async () => (await api.get<ApiEnvelope<KycOverview>>("/me/kyc")).data.data,
+        enabled,
+    });
+
+export const useSubmitKyc = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (form: FormData) =>
+            (await api.post<ApiEnvelope<{ status: string; submission: KycSubmission }>>("/me/kyc", form, { headers: { "Content-Type": "multipart/form-data" } })).data,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["profile", "kyc"] });
+            queryClient.invalidateQueries({ queryKey: ["wallet"] });
+        },
+    });
+};
+
+export const useHistorySummary = (enabled = true) =>
+    useQuery({
+        queryKey: ["profile", "history"],
+        queryFn: async () => (await api.get<ApiEnvelope<HistorySummary>>("/me/history")).data.data,
+        enabled,
+    });

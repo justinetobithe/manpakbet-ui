@@ -2,7 +2,8 @@
 
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
-import type { AdminResource, AdminRole, AdminStats, PermissionDefinition } from "@/types/Admin";
+import type { AdminResource, AdminRole, AdminStats, AppSettings, PermissionDefinition, SystemInfo } from "@/types/Admin";
+import type { KycFileType, KycSubmission } from "@/types/Kyc";
 import type { ApiEnvelope, ApiPaginated, ListParams } from "@/types/Api";
 import type { User } from "@/types/User";
 import type { Transaction } from "@/types/Wallet";
@@ -35,14 +36,15 @@ export const deleteAdminRecord = async (resource: string, id: number) => {
     return data;
 };
 
-export const useAdminStats = () =>
+export const useAdminStats = (enabled = true) =>
     useQuery({
         queryKey: adminKeys.stats(),
         queryFn: async () => (await api.get<ApiEnvelope<AdminStats>>("/admin/stats")).data.data,
         refetchInterval: 60 * 1000,
+        enabled,
     });
 
-export const useAdminList = <T,>(resource: AdminResource | "transactions", params: ListParams, enabled = true) =>
+export const useAdminList = <T,>(resource: AdminResource, params: ListParams, enabled = true) =>
     useQuery({
         queryKey: adminKeys.list(resource, params),
         queryFn: () => getAdminList<T>(resource, params),
@@ -146,3 +148,54 @@ export const uploadImage = async (file: File, folder: string) => {
     });
     return data.data;
 };
+
+export const useAdminDetail = <T,>(resource: AdminResource, id: number | null | undefined) =>
+    useQuery({
+        queryKey: [...adminKeys.resource(resource), "detail", id],
+        queryFn: async () => (await api.get<ApiEnvelope<T>>(`/admin/${resource}/${id}`)).data.data,
+        enabled: Boolean(id),
+    });
+
+export const useAdminSettings = () =>
+    useQuery({
+        queryKey: ["admin", "settings"],
+        queryFn: async () => (await api.get<ApiEnvelope<{ settings: AppSettings; system: SystemInfo }>>("/admin/settings")).data.data,
+    });
+
+export const useSaveSettings = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (payload: Partial<{ [K in keyof AppSettings]: Partial<AppSettings[K]> }>) =>
+            (await api.put<ApiEnvelope<{ settings: AppSettings; system: SystemInfo }>>("/admin/settings", payload)).data,
+        onSuccess: (response) => {
+            queryClient.setQueryData(["admin", "settings"], response.data);
+            queryClient.invalidateQueries({ queryKey: ["content", "settings"] });
+            queryClient.invalidateQueries({ queryKey: ["wallet"] });
+        },
+    });
+};
+
+export const useReviewKyc = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async ({ id, decision, reason }: { id: number; decision: "approve" | "reject"; reason?: string }) =>
+            (await api.post<ApiEnvelope<KycSubmission>>(`/admin/kyc/${id}/review`, { decision, reason })).data,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: adminKeys.resource("kyc") });
+            queryClient.invalidateQueries({ queryKey: adminKeys.resource("users") });
+            queryClient.invalidateQueries({ queryKey: adminKeys.stats() });
+        },
+    });
+};
+
+export const useKycFile = (id: number | null | undefined, type: KycFileType, enabled = true) =>
+    useQuery({
+        queryKey: ["admin", "kyc", "file", id, type],
+        queryFn: async () => {
+            const { data } = await api.get<Blob>(`/admin/kyc/${id}/files/${type}`, { responseType: "blob" });
+            return URL.createObjectURL(data);
+        },
+        enabled: Boolean(id) && enabled,
+        staleTime: 5 * 60 * 1000,
+        gcTime: 5 * 60 * 1000,
+    });

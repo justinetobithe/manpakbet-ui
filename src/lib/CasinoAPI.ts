@@ -112,9 +112,10 @@ export const useLaunchGame = () => useMutation({ mutationFn: launchGame });
 
 export const useEndGameSession = () => useMutation({ mutationFn: endGameSession });
 
-export const useRounds = (page = 1, perPage = 15) =>
+export const useRounds = (page = 1, perPage = 15, enabled = true) =>
     useQuery({
         queryKey: ["casino", "rounds", page, perPage],
+        enabled,
         queryFn: () => getRounds(page, perPage),
         placeholderData: keepPreviousData,
     });

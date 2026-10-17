@@ -1,3 +1,5 @@
+import type { KycStatus } from "./User";
+
 export type TransactionType = "deposit" | "withdraw" | "bonus" | "adjustment";
 
 export type TransactionStatus = "pending" | "approved" | "rejected";
@@ -40,9 +42,24 @@ export type WalletSummary = {
     total_withdrawals: number;
     limits: {
         min_deposit: number;
+        max_deposit: number;
         min_withdraw: number;
+        max_withdraw: number;
         methods: PaymentMethod[];
     };
+    channels: Array<{ id: PaymentMethod; account_name?: string | null; account_number?: string | null }>;
+    kyc_status: KycStatus;
+    require_kyc_for_withdraw: boolean;
+};
+
+export type HistorySummary = {
+    cash_in: number;
+    cash_out: number;
+    total_bets: number;
+    total_wins: number;
+    rounds: number;
+    net_gaming: number;
+    balance: number;
 };
 
 export type WalletRequest = {

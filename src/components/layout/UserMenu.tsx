@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { History, LayoutDashboard, LogOut, ShieldCheck, UserRound, Wallet } from "lucide-react";
+import { BadgeCheck, History, LayoutDashboard, LogOut, ShieldCheck, UserRound, Wallet } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { AppBadge } from "@/components/app";
 import { useAuth } from "@/hooks/useAuth";
@@ -41,7 +41,8 @@ export default function UserMenu() {
                 <DropdownMenuSeparator className="bg-border" />
                 <MenuLink href="/account" icon={<LayoutDashboard />} label="My Account" />
                 <MenuLink href="/account/wallet" icon={<Wallet />} label="Wallet" />
-                <MenuLink href="/account/transactions" icon={<History />} label="Transactions" />
+                <MenuLink href="/account/history" icon={<History />} label="History" />
+                <MenuLink href="/account/verification" icon={<BadgeCheck />} label="Verification" />
                 <MenuLink href="/account/profile" icon={<UserRound />} label="Profile & Security" />
                 {isBackoffice ? (
                     <>

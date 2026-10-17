@@ -1,10 +1,11 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { ArrowDownToLine, ArrowUpFromLine, CheckCircle2 } from "lucide-react";
+import { ArrowDownToLine, ArrowUpFromLine, BadgeCheck, CheckCircle2, Copy, ShieldAlert } from "lucide-react";
 import { AppAmount, AppButton, AppTextField, AppToast } from "@/components/app";
 import { paymentMethods } from "@/config/site";
 import apiError, { apiFieldErrors } from "@/lib/apiError";
@@ -31,7 +32,10 @@ export default function WalletForm({ tab, onTabChange, onDone, compact }: Wallet
     const balance = wallet?.balance ?? 0;
     const preferredMethod = useWalletStore((state) => state.preferredMethod);
     const setPreferredMethod = useWalletStore((state) => state.setPreferredMethod);
-    const selectedMethod: PaymentMethod = paymentMethods.some((method) => method.id === preferredMethod) ? preferredMethod : "gcash";
+    const allowedMethods = wallet?.limits.methods ?? paymentMethods.map((method) => method.id);
+    const selectedMethod: PaymentMethod = allowedMethods.includes(preferredMethod) ? preferredMethod : (allowedMethods[0] ?? "gcash");
+    const channel = wallet?.channels.find((item) => item.id === selectedMethod);
+    const kycBlocked = tab === "withdraw" && Boolean(wallet?.require_kyc_for_withdraw) && wallet?.kyc_status !== "verified";
     const savedName = useWalletStore((state) => state.savedAccountName);
     const savedNumber = useWalletStore((state) => state.savedAccountNumber);
     const rememberAccount = useWalletStore((state) => state.rememberAccount);
@@ -149,11 +153,31 @@ export default function WalletForm({ tab, onTabChange, onDone, compact }: Wallet
                 ) : null}
             </div>
 
+            {kycBlocked ? (
+                <div className="flex flex-col items-center gap-3 rounded-2xl border border-warning/40 bg-warning/10 p-5 text-center">
+                    <ShieldAlert className="size-8 text-amber-300" />
+                    <div>
+                        <div className="font-display text-lg font-extrabold">{wallet?.kyc_status === "pending" ? "Verification in review" : "Verify your identity to withdraw"}</div>
+                        <p className="mt-1 text-sm text-muted-foreground">
+                            {wallet?.kyc_status === "pending"
+                                ? "We're reviewing your documents. Withdrawals unlock as soon as you're verified."
+                                : "For your security, withdrawals require a verified account. It only takes a few minutes."}
+                        </p>
+                    </div>
+                    {wallet?.kyc_status !== "pending" ? (
+                        <AppButton asChild onClick={onDone}>
+                            <Link href="/account/verification">
+                                <BadgeCheck /> Verify now
+                            </Link>
+                        </AppButton>
+                    ) : null}
+                </div>
+            ) : (
             <form onSubmit={submit} className="space-y-4" noValidate>
                 <div>
                     <div className="mb-2 text-xs font-semibold text-foreground/80">Payment channel</div>
                     <div className="grid grid-cols-2 gap-2.5">
-                        {paymentMethods.map((method) => {
+                        {paymentMethods.filter((method) => !wallet || wallet.limits.methods.includes(method.id)).map((method) => {
                             const active = selectedMethod === method.id;
                             return (
                                 <button
@@ -177,6 +201,31 @@ export default function WalletForm({ tab, onTabChange, onDone, compact }: Wallet
                         })}
                     </div>
                 </div>
+
+                {tab === "deposit" && channel?.account_number ? (
+                    <div className="rounded-2xl border border-gold-400/30 bg-gold-400/8 p-3.5">
+                        <div className="text-[10px] font-bold tracking-wider text-gold-300 uppercase">Send your payment to</div>
+                        <div className="mt-1.5 flex items-center justify-between gap-3">
+                            <div className="min-w-0">
+                                <div className="truncate text-sm font-bold">{channel.account_name}</div>
+                                <div className="font-mono text-lg font-extrabold tracking-wider text-gold-200">{channel.account_number}</div>
+                            </div>
+                            <AppButton
+                                type="button"
+                                tone="surface"
+                                size="sm"
+                                leftIcon={<Copy />}
+                                onClick={() => {
+                                    void navigator.clipboard?.writeText(channel.account_number ?? "");
+                                    AppToast.success("Account number copied");
+                                }}
+                            >
+                                Copy
+                            </AppButton>
+                        </div>
+                        <p className="mt-2 text-[11px] text-muted-foreground">Transfer the exact amount, then submit this form with your sender details.</p>
+                    </div>
+                ) : null}
 
                 <AppTextField control={form.control} name="amount" label="Amount" type="number" inputMode="decimal" prefix="₱" placeholder={String(tab === "deposit" ? minDeposit : minWithdraw)} />
 
@@ -210,6 +259,7 @@ export default function WalletForm({ tab, onTabChange, onDone, compact }: Wallet
                         : `Minimum withdrawal ${formatMoney(minWithdraw)}. Funds are held until the payout is processed.`}
                 </p>
             </form>
+            )}
         </div>
     );
 }

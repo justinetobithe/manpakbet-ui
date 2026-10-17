@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useRouter } from "next/navigation";
 import type { ColumnDef } from "@tanstack/react-table";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -41,11 +42,13 @@ export type ResourceConfig<T extends { id: number }> = {
     dialogSize?: "md" | "lg" | "xl";
     optionSources?: Record<string, FieldOption[]>;
     rowActions?: (record: T) => React.ReactNode;
+    rowHref?: (record: T) => string;
     renderMobileCard?: (record: T) => React.ReactNode;
     canDelete?: (record: T) => boolean;
 };
 
 export default function ResourceManager<T extends { id: number }>({ config }: { config: ResourceConfig<T> }) {
+    const router = useRouter();
     const { can } = useAuth();
     const pageSize = useAdminStore((state) => state.pageSize);
     const setPageSize = useAdminStore((state) => state.setPageSize);
@@ -175,7 +178,7 @@ export default function ResourceManager<T extends { id: number }>({ config }: { 
                     setSort(next);
                     setPage(1);
                 }}
-                onRowClick={writable ? openEdit : undefined}
+                onRowClick={config.rowHref ? (record) => router.push(config.rowHref!(record)) : writable ? openEdit : undefined}
                 renderMobileCard={config.renderMobileCard}
                 emptyTitle={`No ${config.title.toLowerCase()} found`}
                 toolbar={

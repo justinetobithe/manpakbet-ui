@@ -1,4 +1,5 @@
 import {
+    BadgeCheck,
     BadgePercent,
     Banknote,
     Crown,
@@ -15,6 +16,7 @@ import {
     LifeBuoy,
     Newspaper,
     Radio,
+    Settings,
     ShieldCheck,
     Sparkles,
     Spade,
@@ -69,8 +71,8 @@ export const bottomTabs: NavItem[] = [
 export const accountNav: NavItem[] = [
     { label: "Overview", href: "/account", icon: LayoutDashboard },
     { label: "Wallet", href: "/account/wallet", icon: Wallet },
-    { label: "Transactions", href: "/account/transactions", icon: History },
-    { label: "Game history", href: "/account/games", icon: Dices },
+    { label: "History", href: "/account/history", icon: History },
+    { label: "Verification", href: "/account/verification", icon: BadgeCheck },
     { label: "Profile", href: "/account/profile", icon: UserRound },
 ];
 
@@ -80,18 +82,25 @@ export const adminNav: Array<{ title: string; items: NavItem[] }> = [
         items: [{ label: "Dashboard", href: "/admin", icon: LayoutDashboard, permission: "dashboard.view" }],
     },
     {
-        title: "Operations",
+        title: "Players",
         items: [
-            { label: "Transactions", href: "/admin/transactions", icon: Banknote, permission: "transactions.view" },
-            { label: "Players & Staff", href: "/admin/users", icon: Users, permission: "users.view" },
+            { label: "Accounts", href: "/admin/users", icon: Users, permission: "users.view" },
+            { label: "KYC Review", href: "/admin/kyc", icon: BadgeCheck, permission: "kyc.review" },
+        ],
+    },
+    {
+        title: "Finance",
+        items: [
+            { label: "Cash In / Out", href: "/admin/transactions", icon: Banknote, permission: "transactions.view" },
+            { label: "Bet History", href: "/admin/rounds", icon: Dices, permission: "transactions.view" },
         ],
     },
     {
         title: "Lobby",
         items: [
             { label: "Games", href: "/admin/games", icon: Gamepad2, permission: "games.manage" },
-            { label: "Categories", href: "/admin/categories", icon: Layers, permission: "games.manage" },
             { label: "Providers", href: "/admin/providers", icon: Crown, permission: "games.manage" },
+            { label: "Categories", href: "/admin/categories", icon: Layers, permission: "games.manage" },
         ],
     },
     {
@@ -103,8 +112,11 @@ export const adminNav: Array<{ title: string; items: NavItem[] }> = [
         ],
     },
     {
-        title: "Security",
-        items: [{ label: "Roles & Access", href: "/admin/roles", icon: ShieldCheck, permission: "roles.manage" }],
+        title: "System",
+        items: [
+            { label: "Settings", href: "/admin/settings", icon: Settings, permission: "settings.manage" },
+            { label: "Roles & Access", href: "/admin/roles", icon: ShieldCheck, permission: "roles.manage" },
+        ],
     },
 ];
 

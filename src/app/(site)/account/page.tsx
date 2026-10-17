@@ -53,7 +53,7 @@ export default function AccountOverviewPage() {
                 icon={<History />}
                 actions={
                     <AppButton asChild tone="ghost" size="sm">
-                        <Link href="/account/transactions">View all</Link>
+                        <Link href="/account/history">View all</Link>
                     </AppButton>
                 }
             >

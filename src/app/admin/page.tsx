@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowDownToLine, ArrowUpFromLine, Banknote, Clock3, Gamepad2, Gift, LayoutDashboard, UserPlus, Users, Wallet } from "lucide-react";
+import { ArrowDownToLine, ArrowUpFromLine, BadgeCheck, Banknote, Clock3, Gamepad2, Gift, LayoutDashboard, Users, Wallet } from "lucide-react";
 import { AppAmount, AppBadge, AppButton, AppCard, AppEmpty, AppImage, AppPageHeader, AppStatCard, statusTone } from "@/components/app";
 import TrendChart from "@/components/admin/TrendChart";
 import { useAdminStats } from "@/lib/AdminAPI";
@@ -24,7 +24,9 @@ export default function AdminDashboardPage() {
                 <AppStatCard index={4} label="Player balances" value={isLoading ? "—" : formatMoneyCompact(totals?.player_balance)} icon={<Wallet />} tone="jade" />
                 <AppStatCard index={5} label="Active games" value={isLoading ? "—" : formatNumber(totals?.games)} icon={<Gamepad2 />} tone="violet" />
                 <AppStatCard index={6} label="Live promotions" value={isLoading ? "—" : formatNumber(totals?.active_promotions)} icon={<Gift />} tone="gold" />
-                <AppStatCard index={7} label="New players today" value={isLoading ? "—" : formatNumber(totals?.new_players_today)} icon={<UserPlus />} tone="ember" />
+                <Link href="/admin/kyc" className="block">
+                    <AppStatCard index={7} label="Pending KYC" value={isLoading ? "—" : formatNumber(totals?.pending_kyc)} hint="Identity checks waiting" icon={<BadgeCheck />} tone="ember" className="h-full transition hover:border-gold-400/40" />
+                </Link>
             </div>
 
             <div className="grid gap-5 xl:grid-cols-[1.6fr_1fr]">

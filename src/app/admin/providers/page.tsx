@@ -27,6 +27,7 @@ const config: ResourceConfig<GameProvider> = {
     toForm: (provider) => ({ name: provider.name, slug: provider.slug, logo: provider.logo ?? "", sort_order: String(provider.sort_order ?? 0), is_active: provider.is_active }),
     toPayload: (values) => ({ ...values, slug: values.slug || null, logo: values.logo || null, sort_order: Number(values.sort_order || 0) }),
     filters: [activeFilter],
+    rowHref: (provider) => `/admin/providers/${provider.id}`,
     defaultSort: { id: "sort_order", desc: false },
     dialogSize: "md",
     fields: [

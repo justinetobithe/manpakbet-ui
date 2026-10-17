@@ -1,3 +1,5 @@
+export type KycStatus = "unverified" | "pending" | "verified" | "rejected";
+
 export type Role = "admin" | "staff" | "user" | (string & {});
 
 export type Permission =
@@ -9,7 +11,9 @@ export type Permission =
     | "content.manage"
     | "transactions.view"
     | "transactions.process"
-    | "roles.manage";
+    | "roles.manage"
+    | "settings.manage"
+    | "kyc.review";
 
 export type User = {
     id: number;
@@ -21,6 +25,8 @@ export type User = {
     role: Role;
     balance: string;
     is_active: boolean;
+    kyc_status?: KycStatus;
+    birthdate?: string | null;
     last_login_at?: string | null;
     created_at: string;
     permissions?: Permission[];
