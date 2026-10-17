@@ -18,45 +18,44 @@ export default function HotSpotlight() {
 
     return (
         <AppSection title="Hot right now" subtitle="The lobby's most played titles" icon={<Flame />} href="/games/popular" hrefLabel="All hot games">
-            <div className="grid gap-3 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,2fr)]">
+            <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,2.4fr)]">
                 {spotlight ? (
-                    <motion.div initial={{ opacity: 0, scale: 0.97 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
+                    <motion.div initial={{ opacity: 0, scale: 0.97 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="h-full">
                         <Link
                             href={`/play/${spotlight.slug}`}
-                            className="group border-gradient relative flex h-full min-h-72 overflow-hidden rounded-3xl bg-plum-850"
+                            className="group border-gradient relative flex aspect-[4/5] h-full w-full overflow-hidden rounded-3xl bg-plum-850 sm:aspect-[16/10] lg:aspect-auto"
                         >
-                            <img src={gameImage(spotlight)} alt="" aria-hidden className="absolute inset-0 h-full w-full scale-125 object-cover opacity-50 blur-2xl" />
-                            <div className="absolute inset-0 bg-linear-to-br from-ember-600/35 via-plum-950/70 to-plum-950" />
+                            <AppImage
+                                src={gameImage(spotlight)}
+                                alt={spotlight.name}
+                                wrapperClassName="absolute inset-0"
+                                className="object-cover transition duration-700 group-hover:scale-105"
+                            />
+                            <div className="absolute inset-0 bg-linear-to-t from-plum-950 via-plum-950/40 to-transparent" />
                             <motion.div
-                                className="pointer-events-none absolute -top-20 -right-16 size-64 rounded-full bg-gold-400/25 blur-3xl"
-                                animate={{ opacity: [0.5, 0.9, 0.5] }}
+                                className="pointer-events-none absolute -bottom-16 left-1/2 size-56 -translate-x-1/2 rounded-full bg-gold-400/25 blur-3xl"
+                                animate={{ opacity: [0.4, 0.8, 0.4] }}
                                 transition={{ duration: 3.2, repeat: Infinity }}
                             />
-                            <div className="relative flex w-full items-center gap-4 p-4 sm:gap-6 sm:p-6">
-                                <motion.div whileHover={{ rotate: -2, scale: 1.03 }} className="relative w-32 shrink-0 sm:w-44">
-                                    <div className="absolute -inset-2 rounded-[22px] bg-linear-to-br from-gold-400/60 to-ember-500/50 blur-lg" />
-                                    <AppImage src={gameImage(spotlight)} alt={spotlight.name} wrapperClassName="relative aspect-[4/5] rounded-2xl ring-2 ring-gold-400/60" />
-                                </motion.div>
-                                <div className="min-w-0 space-y-3">
-                                    <span className="bg-ember inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-extrabold tracking-[0.18em] text-white uppercase shadow-lg">
-                                        <Crown className="size-3.5" /> #1 Hottest
+                            <span className="bg-ember absolute top-3 left-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-extrabold tracking-[0.18em] text-white uppercase shadow-lg">
+                                <Crown className="size-3.5" /> #1 Hottest
+                            </span>
+                            <div className="relative mt-auto w-full space-y-2.5 p-4 sm:p-5">
+                                <h3 className="font-display text-2xl leading-tight font-extrabold text-balance drop-shadow-lg sm:text-3xl">{spotlight.name}</h3>
+                                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-foreground/80">
+                                    <span className="font-semibold text-gold-200">{spotlight.provider_ref?.name ?? spotlight.provider}</span>
+                                    <span className="inline-flex items-center gap-1">
+                                        <Users className="size-3.5" /> {formatCompact(spotlight.plays_count)} plays
                                     </span>
-                                    <h3 className="font-display text-2xl leading-tight font-extrabold text-balance sm:text-3xl">{spotlight.name}</h3>
-                                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-foreground/70">
-                                        <span className="font-semibold text-gold-200">{spotlight.provider_ref?.name ?? spotlight.provider}</span>
-                                        <span className="inline-flex items-center gap-1">
-                                            <Users className="size-3.5" /> {formatCompact(spotlight.plays_count)} plays
-                                        </span>
-                                    </div>
-                                    <AppButton size="md" shine leftIcon={<Play className="fill-current" />} className="pointer-events-none">
-                                        Play now
-                                    </AppButton>
                                 </div>
+                                <AppButton size="md" block shine leftIcon={<Play className="fill-current" />} className="pointer-events-none">
+                                    Play now
+                                </AppButton>
                             </div>
                         </Link>
                     </motion.div>
                 ) : (
-                    <div className="min-h-72 animate-pulse rounded-3xl bg-white/5" />
+                    <div className="aspect-[4/5] animate-pulse rounded-3xl bg-white/5 lg:aspect-auto" />
                 )}
 
                 <div className="grid grid-cols-3 gap-2.5 sm:grid-cols-4 sm:gap-3">
